@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロスピA 攻略＆計算プロフェッショナルツール</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        h2 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.2);
+        }
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #1e40af;
+        }
+        .result-box {
+            margin-top: 15px;
+            background-color: #f8fafc;
+            border-left: 5px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .result-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+        .highlight {
+            color: #d97706;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            background: #64748b;
+        }
+        .badge-s { background: #eab308; }
+        .badge-a { background: #3b82f6; }
+        .badge-b { background: #22c55e; }
+        .title-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            background: #fff;
+            margin-top: 10px;
+        }
+        .title-item {
+            padding: 4px 0;
+            border-bottom: 1px border-dashed #f1f5f9;
+            font-size: 0.9rem;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f1f5f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 15px;
+        }
+        .toggle-container input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+        .toggle-container label {
+            margin-bottom: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+        .note-text {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>プロスピA 攻略＆計算ツール (確率計算最適化版)</h1>
+
+    <!-- 1. Vロード エナジー増減計算（確定日本一達成報酬のみ） -->
+    <div class="card">
+        <h2>1. Vロード エナジー収支計算 (確定達成報酬対応)</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Vロード 難易度</label>
+                <select id="vEnergyLevel">
+                    <option value="1">★1 </option>
+                    <option value="2">★2 </option>
+                    <option value="3">★3 </option>
+                    <option value="4">★4 </option>
+                    <option value="5">★5 </option>
+                    <option value="6">★6 </option>
+                    <option value="7">★7 </option>
+                    <option value="8" selected>★8 </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>現在の日本一達成回数</label>
+                <input type="number" id="vWinCount" value="0" min="0" placeholder="例: 0">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>計算する周回数</label>
+            <input type="number" id="vLaps" value="1" min="1">
+        </div>
+
+        <div class="toggle-container">
+            <input type="checkbox" id="staminaHalf">
+            <label for="staminaHalf">⚡ <strong>スタミナ半減（スタ半）キャンペーンを適用</strong> <small style="color:#64748b;">(1周38試合: 24.5エナジー換算／端数四捨五入)</small></label>
+        </div>
+
+        <button onclick="calcVEnergy()">収支・達成報酬を計算する</button>
+        <div class="result-box" id="vEnergyResult">周回数と難易度を入力して計算ボタンを押してください。<br><small class="note-text">※ストーブリーグ等の不確定ランダム報酬は計算から除外しています。</small></div>
+    </div>
+
+    <!-- 2. Vロード 必要試合数計算 -->
+    <div class="card">
+        <h2>2. 選手育成 必要試合数＆周回計算</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label>育成対象の選手ランク</label>
+                <select id="playerRank">
+                    <option value="S">Sランク (Lv.1 → 70)</option>
+                    <option value="A">Aランク (Lv.1 → 60)</option>
+                    <option value="B">Bランク (Lv.1 → 50)</option>
+                    <option value="C">Cランク (Lv.1 → 40)</option>
+                    <option value="D">Dランク (Lv.1 → 30)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>現在の選手レベル</label>
+                <input type="number" id="currentLevel" value="1" min="1" max="70">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Vロード 難易度</label>
+                <select id="vExpLevel">
+                    <option value="1">★1 (平均 60 EXP/試合)</option>
+                    <option value="2">★2 (平均 75 EXP/試合)</option>
+                    <option value="3">★3 (平均 90 EXP/試合)</option>
+                    <option value="4">★4 (平均 105 EXP/試合)</option>
+                    <option value="5">★5 (平均 120 EXP/試合)</option>
+                    <option value="6">★6 (平均 135 EXP/試合)</option>
+                    <option value="7">★7 (平均 150 EXP/試合)</option>
+                    <option value="8" selected>★8 (平均 166 EXP/試合)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>経験値イベント倍率</label>
+                <select id="expBonus">
+                    <option value="1.0">通常 (1.0倍)</option>
+                    <option value="1.5">経験値 1.5倍</option>
+                    <option value="1.8">経験値 1.8倍</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="toggle-container">
+            <input type="checkbox" id="staminaHalfExp">
+            <label for="staminaHalfExp">⚡ <strong>スタミナ半減（スタ半）を考慮した消費エナジー計算</strong></label>
+        </div>
+
+        <button onclick="calcVMatches()">Lv.MAXまでの必要試合数を計算</button>
+        <div class="result-box" id="vMatchResult">条件を選択して計算してください。</div>
+    </div>
+
+    <!-- 3. 称号＆極意書 同値シミュレーター -->
+    <div class="card">
+        <h2>3. 称号同値＆極意書最適枚数アシスタント</h2>
+        <div class="form-group">
+            <label>選手タイプ</label>
+            <select id="playerType" onchange="toggleStatsLabel()">
+                <option value="野手">野手 (ミート / パワー / 走力)</option>
+                <option value="投手">投手 (球威 / 制球 / スタミナ)</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label id="lblStat1">ミート</label>
+                <input type="number" id="stat1" value="78" min="1" max="99">
+            </div>
+            <div class="form-group">
+                <label id="lblStat2">パワー</label>
+                <input type="number" id="stat2" value="76" min="1" max="99">
+            </div>
+            <div class="form-group">
+                <label id="lblStat3">走力</label>
+                <input type="number" id="stat3" value="72" min="1" max="99">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>目指す同値パターン</label>
+            <select id="targetEquivalency">
+                <option value="1-2">ステータス1 ＆ ステータス2 の同値</option>
+                <option value="1-3">ステータス1 ＆ ステータス3 の同値</option>
+                <option value="2-3">ステータス2 ＆ ステータス3 の同値</option>
+                <option value="all">全3ステータス同値 (全同値)</option>
+            </select>
+        </div>
+        <button onclick="calcTitleAssist()">狙える称号と極意書おすすめ枚数を計算</button>
+        <div class="result-box" id="titleResult">能力値を入力して計算してください。</div>
+    </div>
+
+    <!-- 4. リアタイ大会系 ボーダー予測 (-400補正) -->
+    <div class="card">
+        <h2>4. 大会・リアタイ系ボーダー予測 (初日推移比較モデル)</h2>
+        <div class="form-group">
+            <label>対象イベント種別</label>
+            <select id="eventSelect" onchange="updateEventDefaults()">
+                <option value="Kyushin">球神祭</option>
+                <option value="RealTime">リアタイ公式大会</option>
+                <option value="Darvish">ダルビッシュ杯</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>目標順位 / ボーダー枠</label>
+                <select id="targetRankBorder">
+                    <option value="100">100位以内 (リボン獲得ライン)</option>
+                    <option value="1000" selected>1,000位以内</option>
+                    <option value="3000">3,000位以内</option>
+                    <option value="10000">10,000位以内</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>イベント全開催日数</label>
+                <input type="number" id="totalDays" value="4" min="1">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>1日目 (開始24時間後) のボーダーレート</label>
+                <input type="number" id="day1Rate" value="3500" placeholder="例: 3500">
+            </div>
+            <div class="form-group">
+                <label>現在のボーダーレート</label>
+                <input type="number" id="currentRate" value="5200" placeholder="例: 5200">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>現在の経過日数（例: 2.5日目）</label>
+            <input type="number" id="currentDay" value="2.5" step="0.1" min="1">
+        </div>
+        <button onclick="predictBorder()">初日データ比率から最終ボーダーを予測</button>
+        <div class="result-box" id="predictResult">初日データと現在の数値を入力して予測してください。</div>
+    </div>
+</div>
+
+<script>
+const V_ROAD_WIN_REWARDS = {
+    1: { 1: 25, 2: 10, 3: 10, 4: 10, 5: 0 },
+    2: { 1: 25, 2: 10, 3: 10, 4: 10, 5: 0 },
+    3: { 1: 25, 2: 10, 3: 10, 4: 10, 5: 0 },
+    4: { 1: 25, 2: 10, 3: 10, 4: 10, 5: 0, defaultRate: 10 },
+    5: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, defaultRate: 10 },
+    6: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, 120: 100, 180: 100, defaultRate: 10 },
+    7: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, 120: 100, 180: 100, defaultRate: 10 },
+    8: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, 120: 100, 180: 100, 220: 100, 280: 100, defaultRate: 10 }
+};
+
+const RANK_EXP_DATA = {
+    'S': { maxLv: 70, totalExp: 58162 },
+    'A': { maxLv: 60, totalExp: 27088 },
+    'B': { maxLv: 50, totalExp: 10230 },
+    'C': { maxLv: 40, totalExp: 3820 },
+    'D': { maxLv: 30, totalExp: 1280 }
+};
+
+const V_ROAD_EXP_BASE = { 1: 60, 2: 75, 3: 90, 4: 105, 5: 120, 6: 135, 7: 150, 8: 166 };
+
+// 画像画像に記載の「極意書枚数別 レア度(★1〜★4)抽選確率」
+const GOKUISHI_PROB_TABLE = {
+    0: { 4: 0.10, 3: 0.15, 2: 0.35, 1: 0.40 },
+    1: { 4: 0.15, 3: 0.25, 2: 0.35, 1: 0.25 },
+    2: { 4: 0.20, 3: 0.30, 2: 0.30, 1: 0.20 },
+    3: { 4: 0.25, 3: 0.35, 2: 0.30, 1: 0.10 },
+    4: { 4: 0.30, 3: 0.55, 2: 0.15, 1: 0.00 },
+    5: { 4: 0.40, 3: 0.60, 2: 0.00, 1: 0.00 }
+};
+
+const TITLE_DATABASE = [
+    { name: "火の玉ボール", star: 4, type: "投手", stats: { kyu: 3, sei: 1, sta: 0 } },
+    { name: "ミスターコントロール", star: 4, type: "投手", stats: { kyu: 1, sei: 3, sta: 0 } },
+    { name: "永久機関", star: 4, type: "投手", stats: { kyu: 2, sei: 0, sta: 2 } },
+    { name: "超特急", star: 4, type: "投手", stats: { kyu: 3, sei: 0, sta: 1 } },
+    { name: "魂の投球", star: 4, type: "投手", stats: { kyu: 2, sei: 2, sta: 0 } },
+    { name: "精密機械", star: 3, type: "投手", stats: { kyu: 0, sei: 3, sta: 0 } },
+    { name: "本格派", star: 3, type: "投手", stats: { kyu: 2, sei: 1, sta: 0 } },
+    { name: "不屈の闘志", star: 3, type: "投手", stats: { kyu: 2, sei: 0, sta: 1 } },
+    { name: "勝利の死者", star: 3, type: "投手", stats: { kyu: 0, sei: 0, sta: 0 } },
+    { name: "うなる剛腕", star: 3, type: "投手", stats: { kyu: 3, sei: 0, sta: 0 } },
+    { name: "技巧派", star: 3, type: "投手", stats: { kyu: 1, sei: 2, sta: 0 } },
+    { name: "鉄腕", star: 3, type: "投手", stats: { kyu: 0, sei: 0, sta: 3 } },
+    { name: "好投手", star: 2, type: "投手", stats: { kyu: 1, sei: 1, sta: 0 } },
+    { name: "反骨精神", star: 2, type: "投手", stats: { kyu: 2, sei: -1, sta: 0 } },
+    { name: "粘りの投球", star: 2, type: "投手", stats: { kyu: 0, sei: 1, sta: 1 } },
+    { name: "針の穴を通すような制球", star: 2, type: "投手", stats: { kyu: -1, sei: 3, sta: 0 } },
+    { name: "圧倒的な制球", star: 2, type: "投手", stats: { kyu: 0, sei: 2, sta: 0 } },
+    { name: "全力投球", star: 2, type: "投手", stats: { kyu: 3, sei: -1, sta: 0 } },
+    { name: "攻めの投球術", star: 2, type: "投手", stats: { kyu: 1, sei: 0, sta: 1 } },
+    { name: "圧倒的な球威", star: 2, type: "投手", stats: { kyu: 2, sei: 0, sta: 0 } },
+    { name: "球威自慢", star: 1, type: "投手", stats: { kyu: 1, sei: 0, sta: 0 } },
+    { name: "ケンカ投法", star: 1, type: "投手", stats: { kyu: 2, sei: -1, sta: 0 } },
+    { name: "丁寧な投球", star: 1, type: "投手", stats: { kyu: -1, sei: 2, sta: 0 } },
+    { name: "強心臓", star: 1, type: "投手", stats: { kyu: 0, sei: 0, sta: 0 } },
+    { name: "制球自慢", star: 1, type: "投手", stats: { kyu: 0, sei: 1, sta: 0 } },
+    { name: "安打製造機", star: 4, type: "野手", stats: { mee: 3, pow: 1, run: 0 } },
+    { name: "バズーカー", star: 4, type: "野手", stats: { mee: 1, pow: 3, run: 0 } },
+    { name: "電光石火", star: 4, type: "野手", stats: { mee: 2, pow: 0, run: 2 } },
+    { name: "脅威のスラッガー", star: 4, type: "野手", stats: { mee: 2, pow: 2, run: 0 } },
+    { name: "勝利の死者", star: 3, type: "野手", stats: { mee: 0, pow: 0, run: 0 } },
+    { name: "スナイパー", star: 3, type: "野手", stats: { mee: 2, pow: 1, run: 0 } },
+    { name: "怪力無双", star: 3, type: "野手", stats: { mee: 0, pow: 3, run: 0 } },
+    { name: "稲妻", star: 3, type: "野手", stats: { mee: 0, pow: 2, run: 1 } },
+    { name: "超人", star: 3, type: "野手", stats: { mee: 2, pow: 0, run: 1 } },
+    { name: "好球必打", star: 3, type: "野手", stats: { mee: 3, pow: 0, run: 0 } },
+    { name: "飛ばし屋", star: 3, type: "野手", stats: { mee: 1, pow: 2, run: 0 } },
+    { name: "強打者", star: 2, type: "野手", stats: { mee: 1, pow: 1, run: 0 } },
+    { name: "切り込み隊長", star: 2, type: "野手", stats: { mee: 1, pow: 0, run: 1 } },
+    { name: "反骨精神", star: 2, type: "野手", stats: { mee: -1, pow: 2, run: 0 } },
+    { name: "ラン＆ガン", star: 2, type: "野手", stats: { mee: 0, pow: 1, run: 1 } },
+    { name: "ミスターフルスイング", star: 2, type: "野手", stats: { mee: -1, pow: 3, run: 0 } },
+    { name: "圧倒的パワー", star: 2, type: "野手", stats: { mee: 0, pow: 2, run: 0 } },
+    { name: "コンタクトヒッター", star: 2, type: "野手", stats: { mee: 3, pow: -1, run: 0 } },
+    { name: "圧倒的なミート力", star: 2, type: "野手", stats: { mee: 2, pow: 0, run: 0 } },
+    { name: "パワー自慢", star: 1, type: "野手", stats: { mee: 0, pow: 1, run: 0 } },
+    { name: "強心臓", star: 1, type: "野手", stats: { mee: 0, pow: 0, run: 0 } },
+    { name: "打撃職人", star: 1, type: "野手", stats: { mee: 2, pow: -1, run: 0 } },
+    { name: "大砲", star: 1, type: "野手", stats: { mee: -1, pow: 2, run: 0 } },
+    { name: "ミート自慢", star: 1, type: "野手", stats: { mee: 1, pow: 0, run: 0 } }
+];
+
+function calcVEnergy() {
+    const level = parseInt(document.getElementById('vEnergyLevel').value);
+    let winCount = parseInt(document.getElementById('vWinCount').value);
+    const laps = parseInt(document.getElementById('vLaps').value);
+    const isHalf = document.getElementById('staminaHalf').checked;
+
+    const rawCostPerLap = isHalf ? 24.5 : 49;
+    const rawTotalCost = rawCostPerLap * laps;
+    const totalCost = Math.round(rawTotalCost);
+
+    let totalWinReward = 0;
+    const levelRewards = V_ROAD_WIN_REWARDS[level];
+
+    for (let i = 1; i <= laps; i++) {
+        let currentWin = winCount + i;
+        let reward = 0;
+
+        if (levelRewards.hasOwnProperty(currentWin)) {
+            reward = levelRewards[currentWin];
+        } else if (levelRewards.defaultRate && currentWin <= Math.max(...Object.keys(levelRewards).map(Number))) {
+            reward = levelRewards.defaultRate;
+        } else {
+            reward = 0;
+        }
+
+        totalWinReward += reward;
+    }
+
+    let net = totalWinReward - totalCost;
+
+    document.getElementById('vEnergyResult').innerHTML = `
+        <div class="result-title">★${level} 周回結果 (${winCount}回達成 → ${winCount + laps}回達成) ${isHalf ? '<span class="badge badge-b">スタ半適用</span>' : ''}</div>
+        消費エナジー: <b>${totalCost} エナジー</b> ${isHalf && (rawTotalCost % 1 !== 0) ? `<small style="color:#64748b;">(計算値: ${rawTotalCost} → 四捨五入)</small>` : ''}<br>
+        確定・日本一達成報酬: <b>+${totalWinReward} エナジー</b><br>
+        ------------------------------------------<br>
+        確定実質収支: <span class="highlight" style="color: ${net >= 0 ? '#16a34a' : '#dc2626'};">
+            ${net >= 0 ? '+' : ''}${net} エナジー
+        </span><br>
+        <small style="color:#64748b;">※契約書報酬の回はエナジー加算0として正確に計算されています。</small>
+    `;
+}
+
+function calcVMatches() {
+    const rank = document.getElementById('playerRank').value;
+    const curLv = parseInt(document.getElementById('currentLevel').value);
+    const vLevel = parseInt(document.getElementById('vExpLevel').value);
+    const bonus = parseFloat(document.getElementById('expBonus').value);
+    const isHalf = document.getElementById('staminaHalfExp').checked;
+
+    const rankData = RANK_EXP_DATA[rank];
+    if (curLv >= rankData.maxLv) {
+        document.getElementById('vMatchResult').innerHTML = "すでに最大レベルに達しています。";
+        return;
+    }
+
+    let currentExp = Math.round(rankData.totalExp * Math.pow((curLv - 1) / (rankData.maxLv - 1), 1.2));
+    let reqExp = rankData.totalExp - currentExp;
+
+    let expPerMatch = Math.round(V_ROAD_EXP_BASE[vLevel] * bonus);
+    let totalMatches = Math.ceil(reqExp / expPerMatch);
+    let laps = (totalMatches / 38).toFixed(1);
+    
+    let rawEnergyCost = (totalMatches / 38) * (isHalf ? 24.5 : 49);
+    let energyCost = Math.round(rawEnergyCost);
+
+    document.getElementById('vMatchResult').innerHTML = `
+        <div class="result-title"><span class="badge badge-${rank.toLowerCase()}">${rank}ランク</span> Lv.${curLv} → Lv.${rankData.maxLv}</div>
+        必要経験値: <b>${reqExp.toLocaleString()} EXP</b> (1試合あたり約 ${expPerMatch} EXP)<br>
+        必要試合数: <span class="highlight">${totalMatches} 試合</span><br>
+        Vロード周回数: 約 <b>${laps} 周</b><br>
+        全自操作時エナジー消費目安: 約 <b>${energyCost} エナジー</b> ${isHalf ? '<small style="color:#64748b;">(スタ半適用・四捨五入)</small>' : ''}
+    `;
+}
+
+function toggleStatsLabel() {
+    const type = document.getElementById('playerType').value;
+    if (type === '野手') {
+        document.getElementById('lblStat1').innerText = 'ミート';
+        document.getElementById('lblStat2').innerText = 'パワー';
+        document.getElementById('lblStat3').innerText = '走力';
+    } else {
+        document.getElementById('lblStat1').innerText = '球威';
+        document.getElementById('lblStat2').innerText = '制球';
+        document.getElementById('lblStat3').innerText = 'スタミナ';
+    }
+}
+
+function calcTitleAssist() {
+    const type = document.getElementById('playerType').value;
+    const s1 = parseInt(document.getElementById('stat1').value);
+    const s2 = parseInt(document.getElementById('stat2').value);
+    const s3 = parseInt(document.getElementById('stat3').value);
+    const target = document.getElementById('targetEquivalency').value;
+
+    const allTypeTitles = TITLE_DATABASE.filter(t => t.type === type);
+
+    // 各★ごとの総称号数をカウント
+    const starCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
+    allTypeTitles.forEach(t => starCounts[t.star]++);
+
+    let matchedTitles = [];
+
+    allTypeTitles.forEach(t => {
+        let ns1 = s1 + (t.stats.mee || t.stats.kyu || 0);
+        let ns2 = s2 + (t.stats.pow || t.stats.sei || 0);
+        let ns3 = s3 + (t.stats.run || t.stats.sta || 0);
+
+        let isMatch = false;
+        if (target === "1-2" && ns1 === ns2) isMatch = true;
+        if (target === "1-3" && ns1 === ns3) isMatch = true;
+        if (target === "2-3" && ns2 === ns3) isMatch = true;
+        if (target === "all" && ns1 === ns2 && ns2 === ns3) isMatch = true;
+
+        if (isMatch) {
+            matchedTitles.push(t);
+        }
+    });
+
+    let html = `<div class="result-title">同値達成の分析結果</div>`;
+    if (matchedTitles.length === 0) {
+        html += `現在のステータスから【${target}】同値にできる称号は存在しません。`;
+    } else {
+        html += `条件に合致する称号が <b>${matchedTitles.length}件</b> 見つかりました：<br>`;
+        html += `<div class="title-list">`;
+        matchedTitles.forEach(t => {
+            html += `<div class="title-item">★${t.star} <b>${t.name}</b></div>`;
+        });
+        html += `</div>`;
+
+        // 極意書の枚数(0〜5冊)ごとの同値達成確率（ピンポイント確率）を計算
+        let bestBooks = 0;
+        let maxProbability = -1;
+
+        for (let books = 0; books <= 5; books++) {
+            let totalProbForBooks = 0;
+            matchedTitles.forEach(t => {
+                let starProb = GOKUISHI_PROB_TABLE[books][t.star];
+                let singleProb = starProb * (1 / starCounts[t.star]);
+                totalProbForBooks += singleProb;
+            });
+
+            if (totalProbForBooks > maxProbability) {
+                maxProbability = totalProbForBooks;
+                bestBooks = books;
+            }
+        }
+
+        let maxProbPercent = (maxProbability * 100).toFixed(2);
+
+        html += `<br>推奨「極意書」枚数: <span class="highlight">${bestBooks} 冊</span><br>`;
+        html += `<small style="color:#64748b;">（最大確率: 約 <b>${maxProbPercent}%</b> で狙いの同値称号が出現します）</small><br>`;
+        html += `<small class="note-text">※各レア度内の個別の称号の出現率（1 / 該当レア度の全称号数）× 画像の確率表に基づいて最も確率が高くなる枚数を算出しています。</small>`;
+    }
+
+    document.getElementById('titleResult').innerHTML = html;
+}
+
+function updateEventDefaults() {
+    const evt = document.getElementById('eventSelect').value;
+    if (evt === 'Kyushin') {
+        document.getElementById('day1Rate').value = "3800";
+        document.getElementById('currentRate').value = "5500";
+    } else if (evt === 'RealTime') {
+        document.getElementById('day1Rate').value = "3200";
+        document.getElementById('currentRate').value = "4800";
+    } else if (evt === 'Darvish') {
+        document.getElementById('day1Rate').value = "4200";
+        document.getElementById('currentRate').value = "6000";
+    }
+}
+
+function predictBorder() {
+    const totalDays = parseFloat(document.getElementById('totalDays').value);
+    const currentDay = parseFloat(document.getElementById('currentDay').value);
+    const day1Rate = parseFloat(document.getElementById('day1Rate').value);
+    const currentRate = parseFloat(document.getElementById('currentRate').value);
+    const evt = document.getElementById('eventSelect').value;
+
+    if (currentDay < 1 || currentDay > totalDays || day1Rate <= 0) {
+        document.getElementById('predictResult').innerHTML = "正しい日数（1日目以上）と初日レートを入力してください。";
+        return;
+    }
+
+    let endSpurtMultiplier = 1.25; 
+    if (evt === 'Darvish') endSpurtMultiplier = 1.35;
+    if (evt === 'Kyushin') endSpurtMultiplier = 1.30;
+
+    let dailyGrowthRate = (currentRate - day1Rate) / (currentDay - 1);
+    if (currentDay === 1) dailyGrowthRate = day1Rate;
+
+    let remainingDays = totalDays - currentDay;
+    let rawPredictedFinal = currentRate + (dailyGrowthRate * remainingDays * (1 + (endSpurtMultiplier - 1) * (remainingDays / totalDays)));
+
+    let predictedFinal = Math.max(0, Math.round(rawPredictedFinal - 400));
+
+    document.getElementById('predictResult').innerHTML = `
+        <div class="result-title">最終ボーダー予測結果 (初日比較ベース)</div>
+        初日(24h)データ: <b>${day1Rate.toLocaleString()} レート</b><br>
+        初日からの増加倍率: <b>${(currentRate / day1Rate).toFixed(2)} 倍</b> (${currentDay}日目時点)<br>
+        予測最終ボーダー: <span class="highlight">${predictedFinal.toLocaleString()} レート</span><br>
+        <small style="color: #64748b;">※正確ではない可能性があります</small>
+    `;
+}
+</script>
+</body>
+</html>
