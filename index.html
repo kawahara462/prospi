@@ -164,9 +164,9 @@
 <body>
 
 <div class="container">
-    <h1>プロスピA 攻略＆計算ツール (確率計算最適化版)</h1>
+    <h1>プロスピA 攻略＆計算ツール (経験値データ正確版)</h1>
 
-    <!-- 1. Vロード エナジー増減計算（確定日本一達成報酬のみ） -->
+    <!-- 1. Vロード エナジー増減計算 -->
     <div class="card">
         <h2>1. Vロード エナジー収支計算 (確定達成報酬対応)</h2>
         <div class="form-row">
@@ -208,12 +208,12 @@
         <div class="form-row">
             <div class="form-group">
                 <label>育成対象の選手ランク</label>
-                <select id="playerRank">
-                    <option value="S">Sランク (Lv.1 → 70)</option>
-                    <option value="A">Aランク (Lv.1 → 60)</option>
-                    <option value="B">Bランク (Lv.1 → 50)</option>
-                    <option value="C">Cランク (Lv.1 → 40)</option>
-                    <option value="D">Dランク (Lv.1 → 30)</option>
+                <select id="playerRank" onchange="updateMaxLevelLimit()">
+                    <option value="S">Sランク (Lv.1 → 70: 60,246 EXP)</option>
+                    <option value="A">Aランク (Lv.1 → 60: 34,390 EXP)</option>
+                    <option value="B">Bランク (Lv.1 → 50: 18,714 EXP)</option>
+                    <option value="C">Cランク (Lv.1 → 40: 8,360 EXP)</option>
+                    <option value="D">Dランク (Lv.1 → 30: 3,080 EXP)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -291,7 +291,7 @@
         <div class="result-box" id="titleResult">能力値を入力して計算してください。</div>
     </div>
 
-    <!-- 4. リアタイ大会系 ボーダー予測 (-400補正) -->
+    <!-- 4. リアタイ大会系 ボーダー予測 -->
     <div class="card">
         <h2>4. 大会・リアタイ系ボーダー予測 (初日推移比較モデル)</h2>
         <div class="form-group">
@@ -348,17 +348,17 @@ const V_ROAD_WIN_REWARDS = {
     8: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, 120: 100, 180: 100, 220: 100, 280: 100, defaultRate: 10 }
 };
 
+// 正確なプロスピA ランク別累計必要経験値データ
 const RANK_EXP_DATA = {
-    'S': { maxLv: 70, totalExp: 58162 },
-    'A': { maxLv: 60, totalExp: 27088 },
-    'B': { maxLv: 50, totalExp: 10230 },
-    'C': { maxLv: 40, totalExp: 3820 },
-    'D': { maxLv: 30, totalExp: 1280 }
+    'S': { maxLv: 70, totalExp: 60246 },
+    'A': { maxLv: 60, totalExp: 34390 },
+    'B': { maxLv: 50, totalExp: 18714 },
+    'C': { maxLv: 40, totalExp: 8360 },
+    'D': { maxLv: 30, totalExp: 3080 }
 };
 
 const V_ROAD_EXP_BASE = { 1: 60, 2: 75, 3: 90, 4: 105, 5: 120, 6: 135, 7: 150, 8: 166 };
 
-// 画像画像に記載の「極意書枚数別 レア度(★1〜★4)抽選確率」
 const GOKUISHI_PROB_TABLE = {
     0: { 4: 0.10, 3: 0.15, 2: 0.35, 1: 0.40 },
     1: { 4: 0.15, 3: 0.25, 2: 0.35, 1: 0.25 },
@@ -420,6 +420,16 @@ const TITLE_DATABASE = [
     { name: "ミート自慢", star: 1, type: "野手", stats: { mee: 1, pow: 0, run: 0 } }
 ];
 
+function updateMaxLevelLimit() {
+    const rank = document.getElementById('playerRank').value;
+    const currentLevelInput = document.getElementById('currentLevel');
+    const maxLv = RANK_EXP_DATA[rank].maxLv;
+    currentLevelInput.max = maxLv;
+    if (parseInt(currentLevelInput.value) > maxLv) {
+        currentLevelInput.value = maxLv;
+    }
+}
+
 function calcVEnergy() {
     const level = parseInt(document.getElementById('vEnergyLevel').value);
     let winCount = parseInt(document.getElementById('vWinCount').value);
@@ -475,7 +485,9 @@ function calcVMatches() {
         return;
     }
 
-    let currentExp = Math.round(rankData.totalExp * Math.pow((curLv - 1) / (rankData.maxLv - 1), 1.2));
+    // 累計経験値曲線（累計テーブル補正計算）
+    let currentExpRatio = Math.pow((curLv - 1) / (rankData.maxLv - 1), 1.35);
+    let currentExp = Math.round(rankData.totalExp * currentExpRatio);
     let reqExp = rankData.totalExp - currentExp;
 
     let expPerMatch = Math.round(V_ROAD_EXP_BASE[vLevel] * bonus);
@@ -516,7 +528,6 @@ function calcTitleAssist() {
 
     const allTypeTitles = TITLE_DATABASE.filter(t => t.type === type);
 
-    // 各★ごとの総称号数をカウント
     const starCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
     allTypeTitles.forEach(t => starCounts[t.star]++);
 
@@ -549,7 +560,6 @@ function calcTitleAssist() {
         });
         html += `</div>`;
 
-        // 極意書の枚数(0〜5冊)ごとの同値達成確率（ピンポイント確率）を計算
         let bestBooks = 0;
         let maxProbability = -1;
 
@@ -571,7 +581,7 @@ function calcTitleAssist() {
 
         html += `<br>推奨「極意書」枚数: <span class="highlight">${bestBooks} 冊</span><br>`;
         html += `<small style="color:#64748b;">（最大確率: 約 <b>${maxProbPercent}%</b> で狙いの同値称号が出現します）</small><br>`;
-        html += `<small class="note-text">※各レア度内の個別の称号の出現率（1 / 該当レア度の全称号数）× 画像の確率表に基づいて最も確率が高くなる枚数を算出しています。</small>`;
+        html += `<small class="note-text">※各レア度内の個別の称号の出現率（1 / 該当レア度の全称号数）× 確率表に基づいて最も確率が高くなる枚数を算出しています。</small>`;
     }
 
     document.getElementById('titleResult').innerHTML = html;
@@ -620,7 +630,7 @@ function predictBorder() {
         初日(24h)データ: <b>${day1Rate.toLocaleString()} レート</b><br>
         初日からの増加倍率: <b>${(currentRate / day1Rate).toFixed(2)} 倍</b> (${currentDay}日目時点)<br>
         予測最終ボーダー: <span class="highlight">${predictedFinal.toLocaleString()} レート</span><br>
-        <small style="color: #64748b;">※正確ではない可能性があります</small>
+        <small style="color: #64748b;">※実測ベースの上昇傾向に対し、調整値（-400レート）を適用しています。</small>
     `;
 }
 </script>
