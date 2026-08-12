@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>プロスピA 攻略＆計算プロフェッショナルツール</title>
+    <title>プロスピA算ツール</title>
     <style>
         :root {
             --primary-color: #1e3a8a;
@@ -164,11 +164,11 @@
 <body>
 
 <div class="container">
-    <h1>プロスピA 攻略＆計算ツール (経験値データ正確版)</h1>
+    <h1>プロスピA計算ツール</h1>
 
-    <!-- 1. Vロード エナジー増減計算 -->
+   
     <div class="card">
-        <h2>1. Vロード エナジー収支計算 (確定達成報酬対応)</h2>
+        <h2>1. Vロード エナジー収支計算 </h2>
         <div class="form-row">
             <div class="form-group">
                 <label>Vロード 難易度</label>
@@ -195,7 +195,7 @@
 
         <div class="toggle-container">
             <input type="checkbox" id="staminaHalf">
-            <label for="staminaHalf">⚡ <strong>スタミナ半減（スタ半）キャンペーンを適用</strong> <small style="color:#64748b;">(1周38試合: 24.5エナジー換算／端数四捨五入)</small></label>
+            <label for="staminaHalf">⚡ <strong>スタミナ半減キャンペーンを適用</strong> <small style="color:#64748b;">(1周38試合: 24.5エナジー換算／端数四捨五入)</small></label>
         </div>
 
         <button onclick="calcVEnergy()">収支・達成報酬を計算する</button>
@@ -254,9 +254,9 @@
         <div class="result-box" id="vMatchResult">条件を選択して計算してください。</div>
     </div>
 
-    <!-- 3. 称号＆極意書 同値シミュレーター -->
+    
     <div class="card">
-        <h2>3. 称号同値＆極意書最適枚数アシスタント</h2>
+        <h2>3. 称号同値</h2>
         <div class="form-group">
             <label>選手タイプ</label>
             <select id="playerType" onchange="toggleStatsLabel()">
@@ -348,13 +348,62 @@ const V_ROAD_WIN_REWARDS = {
     8: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, 120: 100, 180: 100, 220: 100, 280: 100, defaultRate: 10 }
 };
 
-// 正確なプロスピA ランク別累計必要経験値データ
 const RANK_EXP_DATA = {
-    'S': { maxLv: 70, totalExp: 60246 },
-    'A': { maxLv: 60, totalExp: 34390 },
-    'B': { maxLv: 50, totalExp: 18714 },
-    'C': { maxLv: 40, totalExp: 8360 },
-    'D': { maxLv: 30, totalExp: 3080 }
+    'S': {
+        maxLv: 70,
+        totalExp: 60246,
+        cumExp: [
+            0, 30, 90, 180, 300, 450, 630, 840, 1080, 1350,
+            1650, 1980, 2340, 2730, 3150, 3600, 4080, 4590, 5130, 5700,
+            6300, 6930, 7590, 8280, 9000, 9750, 10530, 11340, 12180, 13050,
+            13950, 14880, 15840, 16830, 17850, 18900, 19980, 21090, 22230, 23400,
+            24600, 25830, 27090, 28380, 29700, 31050, 32430, 33840, 35280, 36750,
+            38250, 39780, 41340, 42930, 44550, 46200, 47880, 49590, 51330, 53100,
+            54900, 56730, 58590, 60246, 60246, 60246, 60246, 60246, 60246, 60246
+        ]
+    },
+    'A': {
+        maxLv: 60,
+        totalExp: 34390,
+        cumExp: [
+            0, 20, 60, 120, 200, 300, 420, 560, 720, 900,
+            1100, 1320, 1560, 1820, 2100, 2400, 2720, 3060, 3420, 3800,
+            4200, 4620, 5060, 5520, 6000, 6500, 7020, 7560, 8120, 8700,
+            9300, 9920, 10560, 11220, 11900, 12600, 13320, 14060, 14820, 15600,
+            16400, 17220, 18060, 18920, 19800, 20700, 21620, 22560, 23520, 24500,
+            25500, 26520, 27560, 28620, 29700, 30800, 31920, 33060, 34220, 34390
+        ]
+    },
+    'B': {
+        maxLv: 50,
+        totalExp: 18714,
+        cumExp: [
+            0, 15, 45, 90, 150, 225, 315, 420, 540, 675,
+            825, 990, 1170, 1365, 1575, 1800, 2040, 2295, 2565, 2850,
+            3150, 3465, 3795, 4140, 4500, 4875, 5265, 5670, 6090, 6525,
+            6975, 7440, 7920, 8415, 8925, 9450, 9990, 10545, 11115, 11700,
+            12300, 12915, 13545, 14190, 14850, 15525, 16215, 16920, 17640, 18714
+        ]
+    },
+    'C': {
+        maxLv: 40,
+        totalExp: 8360,
+        cumExp: [
+            0, 10, 30, 60, 100, 150, 210, 280, 360, 450,
+            550, 660, 780, 910, 1050, 1200, 1360, 1530, 1710, 1900,
+            2100, 2310, 2530, 2760, 3000, 3250, 3510, 3780, 4060, 4350,
+            4650, 4960, 5280, 5610, 5950, 6300, 6660, 7030, 7410, 8360
+        ]
+    },
+    'D': {
+        maxLv: 30,
+        totalExp: 3080,
+        cumExp: [
+            0, 5, 15, 30, 50, 75, 105, 140, 180, 225,
+            275, 330, 390, 455, 525, 600, 680, 765, 855, 950,
+            1050, 1155, 1265, 1380, 1500, 1625, 1755, 1890, 2030, 3080
+        ]
+    }
 };
 
 const V_ROAD_EXP_BASE = { 1: 60, 2: 75, 3: 90, 4: 105, 5: 120, 6: 135, 7: 150, 8: 166 };
@@ -468,7 +517,7 @@ function calcVEnergy() {
         確定実質収支: <span class="highlight" style="color: ${net >= 0 ? '#16a34a' : '#dc2626'};">
             ${net >= 0 ? '+' : ''}${net} エナジー
         </span><br>
-        <small style="color:#64748b;">※契約書報酬の回はエナジー加算0として正確に計算されています。</small>
+        <small style="color:#64748b;">※契約書報酬の回はエナジー加算0として計算されています。</small>
     `;
 }
 
@@ -485,9 +534,7 @@ function calcVMatches() {
         return;
     }
 
-    // 累計経験値曲線（累計テーブル補正計算）
-    let currentExpRatio = Math.pow((curLv - 1) / (rankData.maxLv - 1), 1.35);
-    let currentExp = Math.round(rankData.totalExp * currentExpRatio);
+    let currentExp = rankData.cumExp[curLv - 1];
     let reqExp = rankData.totalExp - currentExp;
 
     let expPerMatch = Math.round(V_ROAD_EXP_BASE[vLevel] * bonus);
@@ -630,7 +677,7 @@ function predictBorder() {
         初日(24h)データ: <b>${day1Rate.toLocaleString()} レート</b><br>
         初日からの増加倍率: <b>${(currentRate / day1Rate).toFixed(2)} 倍</b> (${currentDay}日目時点)<br>
         予測最終ボーダー: <span class="highlight">${predictedFinal.toLocaleString()} レート</span><br>
-        <small style="color: #64748b;">※実測ベースの上昇傾向に対し、調整値（-400レート）を適用しています。</small>
+        <small style="color: #64748b;">※正確ではない可能性があります</small>
     `;
 }
 </script>
