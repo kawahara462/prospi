@@ -166,7 +166,7 @@
 <div class="container">
     <h1>プロスピA計算ツール</h1>
 
-   
+    <!-- 1. Vロード エナジー収支計算 -->
     <div class="card">
         <h2>1. Vロード エナジー収支計算 </h2>
         <div class="form-row">
@@ -207,32 +207,26 @@
         <h2>2. 選手育成 必要試合数＆周回計算</h2>
         <div class="form-row">
             <div class="form-group">
-                <label>育成対象の選手ランク</label>
-                <select id="playerRank" onchange="updateMaxLevelLimit()">
-                    <option value="S">Sランク (Lv.1 → 70: 60,246 EXP)</option>
-                    <option value="A">Aランク (Lv.1 → 60: 34,390 EXP)</option>
-                    <option value="B">Bランク (Lv.1 → 50: 18,714 EXP)</option>
-                    <option value="C">Cランク (Lv.1 → 40: 8,360 EXP)</option>
-                    <option value="D">Dランク (Lv.1 → 30: 3,080 EXP)</option>
-                </select>
+                <label>現在の選手レベル</label>
+                <input type="number" id="currentLevel" value="1" min="1" max="75">
             </div>
             <div class="form-group">
-                <label>現在の選手レベル</label>
-                <input type="number" id="currentLevel" value="1" min="1" max="70">
+                <label>目標選手レベル</label>
+                <input type="number" id="targetLevel" value="75" min="1" max="75">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
                 <label>Vロード 難易度</label>
                 <select id="vExpLevel">
-                    <option value="1">★1 (平均 60 EXP/試合)</option>
-                    <option value="2">★2 (平均 75 EXP/試合)</option>
-                    <option value="3">★3 (平均 90 EXP/試合)</option>
-                    <option value="4">★4 (平均 105 EXP/試合)</option>
-                    <option value="5">★5 (平均 120 EXP/試合)</option>
-                    <option value="6">★6 (平均 135 EXP/試合)</option>
-                    <option value="7">★7 (平均 150 EXP/試合)</option>
-                    <option value="8" selected>★8 (平均 166 EXP/試合)</option>
+                    <option value="1">★1 (平均 50 EXP/試合)</option>
+                    <option value="2">★2 (平均 62 EXP/試合)</option>
+                    <option value="3">★3 (平均 81 EXP/試合)</option>
+                    <option value="4">★4 (平均 98 EXP/試合)</option>
+                    <option value="5">★5 (平均 117 EXP/試合)</option>
+                    <option value="6">★6 (平均 130 EXP/試合)</option>
+                    <option value="7">★7 (平均 140 EXP/試合)</option>
+                    <option value="8" selected>★8 (平均 150 EXP/試合)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -250,11 +244,11 @@
             <label for="staminaHalfExp">⚡ <strong>スタミナ半減（スタ半）を考慮した消費エナジー計算</strong></label>
         </div>
 
-        <button onclick="calcVMatches()">Lv.MAXまでの必要試合数を計算</button>
+        <button onclick="calcVMatches()">目標レベルまでの必要試合数を計算</button>
         <div class="result-box" id="vMatchResult">条件を選択して計算してください。</div>
     </div>
 
-    
+    <!-- 3. 称号同値 -->
     <div class="card">
         <h2>3. 称号同値</h2>
         <div class="form-group">
@@ -348,65 +342,29 @@ const V_ROAD_WIN_REWARDS = {
     8: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, 120: 100, 180: 100, 220: 100, 280: 100, defaultRate: 10 }
 };
 
-const RANK_EXP_DATA = {
-    'S': {
-        maxLv: 70,
-        totalExp: 60246,
-        cumExp: [
-            0, 30, 90, 180, 300, 450, 630, 840, 1080, 1350,
-            1650, 1980, 2340, 2730, 3150, 3600, 4080, 4590, 5130, 5700,
-            6300, 6930, 7590, 8280, 9000, 9750, 10530, 11340, 12180, 13050,
-            13950, 14880, 15840, 16830, 17850, 18900, 19980, 21090, 22230, 23400,
-            24600, 25830, 27090, 28380, 29700, 31050, 32430, 33840, 35280, 36750,
-            38250, 39780, 41340, 42930, 44550, 46200, 47880, 49590, 51330, 53100,
-            54900, 56730, 58590, 60246, 60246, 60246, 60246, 60246, 60246, 60246
-        ]
-    },
-    'A': {
-        maxLv: 60,
-        totalExp: 34390,
-        cumExp: [
-            0, 20, 60, 120, 200, 300, 420, 560, 720, 900,
-            1100, 1320, 1560, 1820, 2100, 2400, 2720, 3060, 3420, 3800,
-            4200, 4620, 5060, 5520, 6000, 6500, 7020, 7560, 8120, 8700,
-            9300, 9920, 10560, 11220, 11900, 12600, 13320, 14060, 14820, 15600,
-            16400, 17220, 18060, 18920, 19800, 20700, 21620, 22560, 23520, 24500,
-            25500, 26520, 27560, 28620, 29700, 30800, 31920, 33060, 34220, 34390
-        ]
-    },
-    'B': {
-        maxLv: 50,
-        totalExp: 18714,
-        cumExp: [
-            0, 15, 45, 90, 150, 225, 315, 420, 540, 675,
-            825, 990, 1170, 1365, 1575, 1800, 2040, 2295, 2565, 2850,
-            3150, 3465, 3795, 4140, 4500, 4875, 5265, 5670, 6090, 6525,
-            6975, 7440, 7920, 8415, 8925, 9450, 9990, 10545, 11115, 11700,
-            12300, 12915, 13545, 14190, 14850, 15525, 16215, 16920, 17640, 18714
-        ]
-    },
-    'C': {
-        maxLv: 40,
-        totalExp: 8360,
-        cumExp: [
-            0, 10, 30, 60, 100, 150, 210, 280, 360, 450,
-            550, 660, 780, 910, 1050, 1200, 1360, 1530, 1710, 1900,
-            2100, 2310, 2530, 2760, 3000, 3250, 3510, 3780, 4060, 4350,
-            4650, 4960, 5280, 5610, 5950, 6300, 6660, 7030, 7410, 8360
-        ]
-    },
-    'D': {
-        maxLv: 30,
-        totalExp: 3080,
-        cumExp: [
-            0, 5, 15, 30, 50, 75, 105, 140, 180, 225,
-            275, 330, 390, 455, 525, 600, 680, 765, 855, 950,
-            1050, 1155, 1265, 1380, 1500, 1625, 1755, 1890, 2030, 3080
-        ]
-    }
-};
+// Lv.1から各レベルに達するまでの累積経験値テーブル (全ランク共通)
+const CUMULATIVE_EXP = [
+    0,
+    20,
+    46,
+    78,
+    117,
+    163,
+    216,
+    277,
+    346,  
+    423,  
+    509,
+    1980,  2340,  2730,  3150,  3600,  4080,  4590,  5130,  5700,  
+    6300,  6930,  7590,  8280,  9000,  9750,  10530, 11340, 12180, 13050, 
+    13950, 14880, 15840, 16830, 17850, 18900, 19980, 21090, 22230, 23400, 
+    24600, 25830, 27090, 28380, 29700, 31050, 32430, 33840, 35280, 36750, 
+    38250, 39780, 41340, 42930, 44550, 46200, 47880, 49590, 51330, 53100, 
+    54900, 56730, 58590, 60510, 62490, 64530, 66630, 68790, 71010, 73290, 
+    75630, 78030, 80490, 83010, 85590                                     
+];
 
-const V_ROAD_EXP_BASE = { 1: 60, 2: 75, 3: 90, 4: 105, 5: 120, 6: 135, 7: 150, 8: 166 };
+const V_ROAD_EXP_BASE = { 1: 50, 2: 62, 3: 81, 4: 98, 5: 117, 6: 130, 7: 140, 8: 150 };
 
 const GOKUISHI_PROB_TABLE = {
     0: { 4: 0.10, 3: 0.15, 2: 0.35, 1: 0.40 },
@@ -469,16 +427,6 @@ const TITLE_DATABASE = [
     { name: "ミート自慢", star: 1, type: "野手", stats: { mee: 1, pow: 0, run: 0 } }
 ];
 
-function updateMaxLevelLimit() {
-    const rank = document.getElementById('playerRank').value;
-    const currentLevelInput = document.getElementById('currentLevel');
-    const maxLv = RANK_EXP_DATA[rank].maxLv;
-    currentLevelInput.max = maxLv;
-    if (parseInt(currentLevelInput.value) > maxLv) {
-        currentLevelInput.value = maxLv;
-    }
-}
-
 function calcVEnergy() {
     const level = parseInt(document.getElementById('vEnergyLevel').value);
     let winCount = parseInt(document.getElementById('vWinCount').value);
@@ -522,20 +470,23 @@ function calcVEnergy() {
 }
 
 function calcVMatches() {
-    const rank = document.getElementById('playerRank').value;
     const curLv = parseInt(document.getElementById('currentLevel').value);
+    const tarLv = parseInt(document.getElementById('targetLevel').value);
     const vLevel = parseInt(document.getElementById('vExpLevel').value);
     const bonus = parseFloat(document.getElementById('expBonus').value);
     const isHalf = document.getElementById('staminaHalfExp').checked;
 
-    const rankData = RANK_EXP_DATA[rank];
-    if (curLv >= rankData.maxLv) {
-        document.getElementById('vMatchResult').innerHTML = "すでに最大レベルに達しています。";
+    if (curLv >= tarLv) {
+        document.getElementById('vMatchResult').innerHTML = "目標レベルは現在のレベルより大きい値を指定してください。";
         return;
     }
 
-    let currentExp = rankData.cumExp[curLv - 1];
-    let reqExp = rankData.totalExp - currentExp;
+    const startIdx = Math.max(1, Math.min(75, curLv)) - 1;
+    const targetIdx = Math.max(1, Math.min(75, tarLv)) - 1;
+
+    let currentExp = CUMULATIVE_EXP[startIdx];
+    let targetExp = CUMULATIVE_EXP[targetIdx];
+    let reqExp = targetExp - currentExp;
 
     let expPerMatch = Math.round(V_ROAD_EXP_BASE[vLevel] * bonus);
     let totalMatches = Math.ceil(reqExp / expPerMatch);
@@ -545,7 +496,7 @@ function calcVMatches() {
     let energyCost = Math.round(rawEnergyCost);
 
     document.getElementById('vMatchResult').innerHTML = `
-        <div class="result-title"><span class="badge badge-${rank.toLowerCase()}">${rank}ランク</span> Lv.${curLv} → Lv.${rankData.maxLv}</div>
+        <div class="result-title">Lv.${curLv} → Lv.${tarLv} 育成</div>
         必要経験値: <b>${reqExp.toLocaleString()} EXP</b> (1試合あたり約 ${expPerMatch} EXP)<br>
         必要試合数: <span class="highlight">${totalMatches} 試合</span><br>
         Vロード周回数: 約 <b>${laps} 周</b><br>
