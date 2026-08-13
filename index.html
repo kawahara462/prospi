@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>プロスピA計算ツール</title>
+    <title>プロスピA攻略・計算ツールまとめ</title>
+    <meta name="description" content="プロスピA（プロ野球スピリッツA）のVロードエナジー収支、選手育成の必要試合数、称号同値計算、リアタイ大会のボーダー予測ができる高機能計算ツールサイトです。">
+    
+    <!-- Google AdSense 自動広告タグ -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3167694180057262"
+         crossorigin="anonymous"></script>
+
     <style>
         :root {
             --primary-color: #1e3a8a;
@@ -17,18 +23,26 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
-            line-height: 1.5;
+            padding: 20px 10px;
+            line-height: 1.6;
         }
         .container {
             max-width: 900px;
             margin: 0 auto;
         }
-        h1 {
+        header {
             text-align: center;
-            color: var(--primary-color);
             margin-bottom: 25px;
+        }
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
             font-size: 1.8rem;
+        }
+        .site-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin: 0;
         }
         .card {
             background: var(--card-bg);
@@ -38,7 +52,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         h2 {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: var(--primary-color);
             border-bottom: 3px solid var(--accent-color);
             padding-bottom: 8px;
@@ -50,9 +64,11 @@
         .form-row {
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
         }
         .form-row .form-group {
             flex: 1;
+            min-width: 240px;
         }
         label {
             display: block;
@@ -117,8 +133,6 @@
             color: white;
             background: #64748b;
         }
-        .badge-s { background: #eab308; }
-        .badge-a { background: #3b82f6; }
         .badge-b { background: #22c55e; }
         .title-list {
             max-height: 200px;
@@ -159,28 +173,93 @@
             color: #64748b;
             margin-top: 4px;
         }
+        /* 広告枠コンテナ */
+        .ad-space {
+            margin: 25px 0;
+            text-align: center;
+        }
+        /* 埋め込みフォーム用枠 */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .iframe-container iframe {
+            width: 100%;
+            border: none;
+        }
+        /* フッター */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.85rem;
+            color: #64748b;
+            border-top: 1px solid #cbd5e1;
+            margin-top: 40px;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 25px;
+            width: 85%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: #000; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>プロスピA計算ツール</h1>
+    <header>
+        <h1>プロスピA 総合計算ツール</h1>
+        <p class="site-desc">Vロード周回、経験値計算、称号同値、リアタイボーダー予測をひとつにまとめた攻略ツールです。</p>
+    </header>
 
     <!-- 1. Vロード エナジー収支計算 -->
     <div class="card">
-        <h2>1. Vロード エナジー収支計算 </h2>
+        <h2>1. Vロード エナジー収支計算</h2>
         <div class="form-row">
             <div class="form-group">
                 <label>Vロード 難易度</label>
                 <select id="vEnergyLevel">
-                    <option value="1">★1 </option>
-                    <option value="2">★2 </option>
-                    <option value="3">★3 </option>
-                    <option value="4">★4 </option>
-                    <option value="5">★5 </option>
-                    <option value="6">★6 </option>
-                    <option value="7">★7 </option>
-                    <option value="8" selected>★8 </option>
+                    <option value="1">★1</option>
+                    <option value="2">★2</option>
+                    <option value="3">★3</option>
+                    <option value="4">★4</option>
+                    <option value="5">★5</option>
+                    <option value="6">★6</option>
+                    <option value="7">★7</option>
+                    <option value="8" selected>★8</option>
                 </select>
             </div>
             <div class="form-group">
@@ -248,9 +327,23 @@
         <div class="result-box" id="vMatchResult">条件を選択して計算してください。</div>
     </div>
 
-    <!-- 3. 称号同値 -->
+    <!-- 広告表示エリア（手動配信枠を作る場合の例） -->
+    <div class="ad-space">
+        <!-- Google AdSense レスポンシブディスプレイ広告枠 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3167694180057262"
+             data-ad-slot="auto"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- 3. 称号同値計算 -->
     <div class="card">
-        <h2>3. 称号同値</h2>
+        <h2>3. 称号同値計算</h2>
         <div class="form-group">
             <label>選手タイプ</label>
             <select id="playerType" onchange="toggleStatsLabel()">
@@ -328,6 +421,39 @@
         <button onclick="predictBorder()">初日データ比率から最終ボーダーを予測</button>
         <div class="result-box" id="predictResult">初日データと現在の数値を入力して予測してください。</div>
     </div>
+
+    <!-- 5. お問い合わせフォーム -->
+    <div class="card" id="contact">
+        <h2>5. お問い合わせ・ご要望</h2>
+        <p style="font-size:0.9rem; color:#64748b;">ツールの不具合報告や機能のご要望は、以下のフォームよりお気軽にご連絡ください。</p>
+        <div class="iframe-container">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSehdTIFei4lYw6nskr2iVyVVpmVlgaHqky-gYr6jmIIXzWv_w/viewform?embedded=true" height="520" frameborder="0" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>
+        <a href="#contact">お問い合わせ</a> | 
+        <a href="javascript:void(0);" onclick="openModal()">プライバシーポリシー・免責事項</a>
+    </p>
+    <p>&copy; 2026 プロスピA 総合計算ツール All Rights Reserved.</p>
+</footer>
+
+<!-- プライバシーポリシー モーダル枠 -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2>プライバシーポリシー・免責事項</h2>
+        <h3>免責事項</h3>
+        <p>当サイトで提供する計算結果や予測値は、公式データをもとに独自ロジックで算出された目安です。ゲーム内のアップデートや仕様変更等により、実際の数値と異なる場合があります。当サイトの利用により生じた過失・損害等について、当サイト管理者は一切の責任を負いかねます。</p>
+        
+        <h3>広告の配信について</h3>
+        <p>当サイトでは維持管理費の関係で、第三者配信の広告サービス（Google AdSense）を利用しています。広告配信事業者は、ユーザーの興味に応じた広告を表示するためにCookie（クッキー）を使用することがあります。Cookieを無効にする設定およびGoogleアドセンスに関する詳細は、Googleのガイドラインをご確認ください。</p>
+        
+        <h3>アクセス解析ツールについて</h3>
+        <p>当サイトでは、サイト利用状況の把握のためにアクセス解析ツールを使用する場合があります。データは匿名で収集されており、個人を特定するものではありません。</p>
+    </div>
 </div>
 
 <script>
@@ -342,83 +468,15 @@ const V_ROAD_WIN_REWARDS = {
     8: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 15: 50, 20: 100, 60: 50, 70: 50, 80: 50, 90: 100, 120: 100, 180: 100, 220: 100, 280: 100, defaultRate: 10 }
 };
 
-// Lv.1から各レベルに達するまでの累積経験値テーブル (全ランク共通)
 const CUMULATIVE_EXP = [
-    0,
-    20,
-    46,
-    78,
-    117,
-    163,
-    216,
-    277,
-    346,  
-    423,  
-    509,
-    605,
-    710,
-    826,
-    952,
-    1089,
-    1239,
-    1401,
-    1576,
-    1765,  
-    1968,
-    2186,
-    2421,
-    2672,
-    2940,
-    3227,
-    3534,
-    3860,
-    4208,
-    4579, 
-    4973,
-    5391,
-    5836,
-    6308,
-    6808,
-    7338,
-    7900,
-    8495,
-    9125,
-    9791, 
-    10496,
-    11241,
-    12028,
-    12859, 
-    13737,
-    14664,
-    15642,
-    16674,
-    17763,
-    18911, 
-    20122,
-    21398,
-    22743,
-    24160,
-    25653,
-    27226,
-    28882,
-    30626,
-    32462,
-    34395,
-    36430,
-    38572,
-    40825,
-    43196,
-    45691,
-    48316,
-    51077,
-    53980,
-    57034,
-    60246, 
-    63623,
-    67175,
-    70908,
-    74834,
-    78960                                     
+    0, 20, 46, 78, 117, 163, 216, 277, 346, 423,
+    509, 605, 710, 826, 952, 1089, 1239, 1401, 1576, 1765,
+    1968, 2186, 2421, 2672, 2940, 3227, 3534, 3860, 4208, 4579,
+    4973, 5391, 5836, 6308, 6808, 7338, 7900, 8495, 9125, 9791,
+    10496, 11241, 12028, 12859, 13737, 14664, 15642, 16674, 17763, 18911,
+    20122, 21398, 22743, 24160, 25653, 27226, 28882, 30626, 32462, 34395,
+    36430, 38572, 40825, 43196, 45691, 48316, 51077, 53980, 57034, 60246,
+    63623, 67175, 70908, 74834, 78960
 ];
 
 const V_ROAD_EXP_BASE = { 1: 50, 2: 62, 3: 81, 4: 98, 5: 117, 6: 130, 7: 140, 8: 150 };
@@ -685,8 +743,23 @@ function predictBorder() {
         初日(24h)データ: <b>${day1Rate.toLocaleString()} レート</b><br>
         初日からの増加倍率: <b>${(currentRate / day1Rate).toFixed(2)} 倍</b> (${currentDay}日目時点)<br>
         予測最終ボーダー: <span class="highlight">${predictedFinal.toLocaleString()} レート</span><br>
-        <small style="color: #64748b;">※正確ではない可能性があります</small>
+        <small style="color: #64748b;">※数値は推移予測値です。正確ではない可能性があります。</small>
     `;
+}
+
+function openModal() {
+    document.getElementById('privacyModal').style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById('privacyModal').style.display = "none";
+}
+
+window.onclick = function(event) {
+    let modal = document.getElementById('privacyModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 }
 </script>
 </body>
