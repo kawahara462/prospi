@@ -172,12 +172,10 @@
             color: #64748b;
             margin-top: 4px;
         }
-        /* 広告枠コンテナ */
         .ad-space {
             margin: 25px 0;
             text-align: center;
         }
-        /* 埋め込みフォーム用枠 */
         .iframe-container {
             position: relative;
             width: 100%;
@@ -188,7 +186,6 @@
             width: 100%;
             border: none;
         }
-        /* フッター */
         footer {
             text-align: center;
             padding: 20px 0;
@@ -205,7 +202,6 @@
         footer a:hover {
             text-decoration: underline;
         }
-        /* モーダル */
         .modal {
             display: none;
             position: fixed;
@@ -241,7 +237,7 @@
 <div class="container">
     <header>
         <h1>プロスピA 総合計算ツール</h1>
-        <p class="site-desc">Vロード周回、経験値計算、称号同値、リアタイボーダー予測をひとつにまとめた攻略ツールです。</p>
+        <p class="site-desc">Vロード周回、経験値計算、称号同値、リアタイ大会ボーダー予測をひとつにまとめた攻略ツールです。</p>
     </header>
 
     <!-- 1. Vロード エナジー収支計算 -->
@@ -326,9 +322,8 @@
         <div class="result-box" id="vMatchResult">条件を選択して計算してください。</div>
     </div>
 
-    <!-- 広告表示エリア（手動配信枠を作る場合の例） -->
+    <!-- 広告表示エリア -->
     <div class="ad-space">
-        <!-- Google AdSense レスポンシブディスプレイ広告枠 -->
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-3167694180057262"
@@ -377,48 +372,42 @@
         <div class="result-box" id="titleResult">能力値を入力して計算してください。</div>
     </div>
 
-    <!-- 4. リアタイ大会系 ボーダー予測 -->
+    <!-- 4. リアタイ大会ボーダー予測 -->
     <div class="card">
-        <h2>4. 大会・リアタイ系ボーダー予測 (初日推移比較モデル)</h2>
-        <div class="form-group">
-            <label>対象イベント種別</label>
-            <select id="eventSelect" onchange="updateEventDefaults()">
-                <option value="Kyushin">球神祭</option>
-                <option value="RealTime">リアタイ公式大会</option>
-                <option value="Darvish">ダルビッシュ杯</option>
-            </select>
-        </div>
+        <h2>4. リアタイ大会 ボーダー予測</h2>
         <div class="form-row">
             <div class="form-group">
                 <label>目標順位 / ボーダー枠</label>
                 <select id="targetRankBorder">
                     <option value="100">100位以内</option>
+                    <option value="500">500位以内</option>
                     <option value="1000" selected>1,000位以内</option>
-                    <option value="3000">3,000位以内</option>
+                    <option value="2500">2,500位以内</option>
+                    <option value="5000">5,000位以内</option>
                     <option value="10000">10,000位以内</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>イベント全開催日数</label>
-                <input type="number" id="totalDays" value="4" min="1">
+                <label>大会の総開催日数</label>
+                <input type="number" id="totalDays" value="7" min="1" placeholder="例: 7 (オールスター杯等)">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label>1日目 (開始24時間後) のボーダーレート</label>
-                <input type="number" id="day1Rate" value="3500" placeholder="例: 3500">
+                <label>1日目(初日)のボーダーレート</label>
+                <input type="number" id="day1Rate" value="6982" placeholder="例: 6982">
             </div>
             <div class="form-group">
                 <label>現在のボーダーレート</label>
-                <input type="number" id="currentRate" value="5200" placeholder="例: 5200">
+                <input type="number" id="currentRate" value="8112" placeholder="例: 8112">
             </div>
         </div>
         <div class="form-group">
-            <label>現在の経過日数（例: 2.5日目）</label>
-            <input type="number" id="currentDay" value="2.5" step="0.1" min="1">
+            <label>現在の経過日数（例: 4日目）</label>
+            <input type="number" id="currentDay" value="4" step="0.5" min="1">
         </div>
-        <button onclick="predictBorder()">初日データ比率から最終ボーダーを予測</button>
-        <div class="result-box" id="predictResult">初日データと現在の数値を入力して予測してください。</div>
+        <button onclick="predictBorder()">最終ボーダーを予測する</button>
+        <div class="result-box" id="predictResult">初日レートと現在の経過状況を入力して計算してください。</div>
     </div>
 
     <!-- 5. お問い合わせフォーム -->
@@ -445,13 +434,13 @@
         <span class="close-btn" onclick="closeModal()">&times;</span>
         <h2>プライバシーポリシー・免責事項</h2>
         <h3>免責事項</h3>
-        <p>当サイトで提供する計算結果や予測値は、公式データをもとに独自ロジックで算出された目安です。ゲーム内のアップデートや仕様変更等により、実際の数値と異なる場合があります。当サイトの利用により生じた過失・損害等について、当サイト管理者は一切の責任を負いかねます。</p>
+        <p>当サイトで提供する計算結果や予測値は、過去の大会データをもとに独自ロジックで算出された目安です。実際のゲーム展開や仕様変更により変動する場合があります。当サイトの利用により生じた損害等について、一切の責任を負いかねます。</p>
         
         <h3>広告の配信について</h3>
-        <p>当サイトでは維持管理費の関係で、第三者配信の広告サービス（Google AdSense）を利用しています。広告配信事業者は、ユーザーの興味に応じた広告を表示するためにCookie（クッキー）を使用することがあります。Cookieを無効にする設定およびGoogleアドセンスに関する詳細は、Googleのガイドラインをご確認ください。</p>
+        <p>当サイトでは維持管理費の関係で、第三者配信の広告サービス（Google AdSense）を利用しています。Cookieに関する詳細はGoogleのガイドラインをご確認ください。</p>
         
         <h3>アクセス解析ツールについて</h3>
-        <p>当サイトでは、サイト利用状況の把握のためにアクセス解析ツールを使用する場合があります。データは匿名で収集されており、個人を特定するものではありません。</p>
+        <p>当サイトでは利用状況把握のためにアクセス解析ツールを使用する場合があります。データは匿名で収集されています。</p>
     </div>
 </div>
 
@@ -699,50 +688,60 @@ function calcTitleAssist() {
     document.getElementById('titleResult').innerHTML = html;
 }
 
-function updateEventDefaults() {
-    const evt = document.getElementById('eventSelect').value;
-    if (evt === 'Kyushin') {
-        document.getElementById('day1Rate').value = "3800";
-        document.getElementById('currentRate').value = "5500";
-    } else if (evt === 'RealTime') {
-        document.getElementById('day1Rate').value = "3200";
-        document.getElementById('currentRate').value = "4800";
-    } else if (evt === 'Darvish') {
-        document.getElementById('day1Rate').value = "4200";
-        document.getElementById('currentRate').value = "6000";
-    }
-}
+// 画像のデータに基づく順位別の到達倍率モデル（初日レートに対する比率）
+const RANK_MULTIPLIERS = {
+    100: 1.35,
+    500: 1.30,
+    1000: 1.25,
+    2500: 1.22,
+    5000: 1.20,
+    10000: 1.20
+};
 
 function predictBorder() {
     const totalDays = parseFloat(document.getElementById('totalDays').value);
     const currentDay = parseFloat(document.getElementById('currentDay').value);
     const day1Rate = parseFloat(document.getElementById('day1Rate').value);
     const currentRate = parseFloat(document.getElementById('currentRate').value);
-    const evt = document.getElementById('eventSelect').value;
+    const rank = document.getElementById('targetRankBorder').value;
 
     if (currentDay < 1 || currentDay > totalDays || day1Rate <= 0) {
         document.getElementById('predictResult').innerHTML = "正しい日数（1日目以上）と初日レートを入力してください。";
         return;
     }
 
-    let endSpurtMultiplier = 1.25; 
-    if (evt === 'Darvish') endSpurtMultiplier = 1.35;
-    if (evt === 'Kyushin') endSpurtMultiplier = 1.30;
+    // 順位に応じた到達倍率を取得
+    const baseMultiplier = RANK_MULTIPLIERS[rank] || 1.22;
 
-    let dailyGrowthRate = (currentRate - day1Rate) / (currentDay - 1);
-    if (currentDay === 1) dailyGrowthRate = day1Rate;
+    // 初日データのみによる最終予測レート
+    const targetFinalRate = day1Rate * baseMultiplier;
 
-    let remainingDays = totalDays - currentDay;
-    let rawPredictedFinal = currentRate + (dailyGrowthRate * remainingDays * (1 + (endSpurtMultiplier - 1) * (remainingDays / totalDays)));
+    let predictedFinal = 0;
 
-    let predictedFinal = Math.max(0, Math.round(rawPredictedFinal - 400));
+    if (currentDay === 1) {
+        predictedFinal = targetFinalRate;
+    } else {
+        // 2日目以降の推移補正
+        const remainingDays = totalDays - currentDay;
+        const dailyAvgIncrease = (currentRate - day1Rate) / (currentDay - 1);
+        
+        // 直近ペースからの線形伸び予測（終盤1.08倍スパート補正）
+        const trendPredicted = currentRate + (dailyAvgIncrease * remainingDays * 1.08);
+
+        // 経過日数に応じたハイブリッド重み付け（日にちが進むほど現在レートの推移を優先）
+        const progressRatio = (currentDay - 1) / (totalDays - 1);
+        predictedFinal = (targetFinalRate * (1 - progressRatio)) + (trendPredicted * progressRatio);
+    }
+
+    predictedFinal = Math.max(currentRate, Math.round(predictedFinal));
 
     document.getElementById('predictResult').innerHTML = `
-        <div class="result-title">最終ボーダー予測結果 (初日比較ベース)</div>
-        初日(24h)データ: <b>${day1Rate.toLocaleString()} レート</b><br>
-        初日からの増加倍率: <b>${(currentRate / day1Rate).toFixed(2)} 倍</b> (${currentDay}日目時点)<br>
+        <div class="result-title">リアタイ大会 最終ボーダー予測 (${rank}位以内)</div>
+        初日(1日目)レート: <b>${day1Rate.toLocaleString()} レート</b><br>
+        現在(${currentDay}日目)レート: <b>${currentRate.toLocaleString()} レート</b><br>
+        ------------------------------------------<br>
         予測最終ボーダー: <span class="highlight">${predictedFinal.toLocaleString()} レート</span><br>
-        <small style="color: #64748b;">※数値は推移予測値です。正確ではない可能性があります。</small>
+        <small style="color: #64748b;">※大会実績データ（初日推移＋日次伸び率）をもとに算出した予測値です。</small>
     `;
 }
 
