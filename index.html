@@ -305,6 +305,10 @@
                 <input type="number" id="targetLevel" value="75" min="1" max="75">
             </div>
         </div>
+        <div class="form-group">
+            <label>次のレベルまでに必要な残り経験値 <small style="color:#64748b;">(空欄時はLV直後として計算)</small></label>
+            <input type="number" id="expToNextLevel" min="0" placeholder="例: あと10EXPなら「10」と入力">
+        </div>
         <div class="form-row">
             <div class="form-group">
                 <label>Vロード 難易度</label>
@@ -590,6 +594,7 @@ function calcVEnergy() {
 function calcVMatches() {
     const curLv = parseInt(document.getElementById('currentLevel').value);
     const tarLv = parseInt(document.getElementById('targetLevel').value);
+    const expToNextInput = document.getElementById('expToNextLevel').value.trim();
     const vLevel = parseInt(document.getElementById('vExpLevel').value);
     const bonus = parseFloat(document.getElementById('expBonus').value);
     const isHalf = document.getElementById('staminaHalfExp').checked;
@@ -602,9 +607,23 @@ function calcVMatches() {
     const startIdx = Math.max(1, Math.min(75, curLv)) - 1;
     const targetIdx = Math.max(1, Math.min(75, tarLv)) - 1;
 
-    let currentExp = CUMULATIVE_EXP[startIdx];
+    let baseStartExp = CUMULATIVE_EXP[startIdx];
     let targetExp = CUMULATIVE_EXP[targetIdx];
-    let reqExp = targetExp - currentExp;
+    
+    // 現在のレベルから次のレベルに上がるのに必要な基本経験値
+    let reqForNextLevel = CUMULATIVE_EXP[startIdx + 1] - CUMULATIVE_EXP[startIdx];
+    
+    let currentExp = baseStartExp;
+    if (expToNextInput !== "") {
+        let remainingExpToNext = parseInt(expToNextInput);
+        if (!isNaN(remainingExpToNext) && remainingExpToNext >= 0) {
+            // 入力された「残り経験値」から、すでに獲得済みの経験値を計算して反映
+            let gainedInCurrentLv = Math.max(0, reqForNextLevel - remainingExpToNext);
+            currentExp += gainedInCurrentLv;
+        }
+    }
+
+    let reqExp = Math.max(0, targetExp - currentExp);
 
     let expPerMatch = Math.round(V_ROAD_EXP_BASE[vLevel] * bonus);
     let totalMatches = Math.ceil(reqExp / expPerMatch);
