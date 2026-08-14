@@ -3,9 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>プロスピA計算ツール</title>
-    <meta name="description" content="プロスピA（プロ野球スピリッツA）のVロードエナジー収支、選手育成の必要試合数、称号同値計算、リアタイ大会のボーダー予測ができる高機能計算ツールサイトです。">
     
+    <!-- 検索エンジン用タイトル & メタ情報 -->
+    <title>プロスピA 総合計算ツール | Vロード・育成・称号同値・リアタイボーダー予測</title>
+    <meta name="description" content="プロスピA（プロ野球スピリッツA）のVロードエナジー収支、選手育成の必要試合数、称号同値計算、リアタイ大会のボーダー予測ができる高機能計算ツールサイトです。">
+    <meta name="keywords" content="プロスピA,計算ツール,リアタイ,ボーダー予測,Vロード,称号,同値,エナジー">
+    <meta name="robots" content="index, follow">
+    
+    <!-- 正規化URL (canonical) -->
+    <link rel="canonical" href="https://prospi-1.onrender.com/">
+
+    <!-- OGP (SNSシェア・Google認識用) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="プロスピA 総合計算ツール">
+    <meta property="og:description" content="Vロード周回、経験値計算、称号同値、リアタイ大会ボーダー予測をひとつにまとめた攻略ツールです。">
+    <meta property="og:url" content="https://prospi-1.onrender.com/">
+    <meta property="og:site_name" content="プロスピA 総合計算ツール">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- AdSenseコード -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3167694180057262"
          crossorigin="anonymous"></script>
 
@@ -568,7 +584,7 @@ function calcVEnergy() {
         確定実質収支: <span class="highlight" style="color: ${net >= 0 ? '#16a34a' : '#dc2626'};">
             ${net >= 0 ? '+' : ''}${net} エナジー
         </span><br>
-        <small style="color:#64748b;">※契約書報酬の回はエナジー加算0として計算されています。</small>
+        <small style="color:#64748b;">※ストーブリーグ等の不確定ランダム報酬は計算から除外しています。</small>
     `;
 }
 
@@ -688,7 +704,6 @@ function calcTitleAssist() {
     document.getElementById('titleResult').innerHTML = html;
 }
 
-// 画像のデータに基づく順位別の到達倍率モデル（初日レートに対する比率）
 const RANK_MULTIPLIERS = {
     100: 1.35,
     500: 1.30,
@@ -710,10 +725,7 @@ function predictBorder() {
         return;
     }
 
-    // 順位に応じた到達倍率を取得
     const baseMultiplier = RANK_MULTIPLIERS[rank] || 1.22;
-
-    // 初日データのみによる最終予測レート
     const targetFinalRate = day1Rate * baseMultiplier;
 
     let predictedFinal = 0;
@@ -721,14 +733,10 @@ function predictBorder() {
     if (currentDay === 1) {
         predictedFinal = targetFinalRate;
     } else {
-        // 2日目以降の推移補正
         const remainingDays = totalDays - currentDay;
         const dailyAvgIncrease = (currentRate - day1Rate) / (currentDay - 1);
-        
-        // 直近ペースからの線形伸び予測（終盤1.08倍スパート補正）
         const trendPredicted = currentRate + (dailyAvgIncrease * remainingDays * 1.08);
 
-        // 経過日数に応じたハイブリッド重み付け（日にちが進むほど現在レートの推移を優先）
         const progressRatio = (currentDay - 1) / (totalDays - 1);
         predictedFinal = (targetFinalRate * (1 - progressRatio)) + (trendPredicted * progressRatio);
     }
