@@ -73,6 +73,12 @@
             padding-bottom: 8px;
             margin-top: 0;
         }
+        h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -160,7 +166,7 @@
         }
         .title-item {
             padding: 4px 0;
-            border-bottom: 1px border-dashed #f1f5f9;
+            border-bottom: 1px dashed #f1f5f9;
             font-size: 0.9rem;
         }
         .toggle-container {
@@ -253,8 +259,8 @@
 <div class="container">
     <header>
         <h1>プロスピA 総合計算ツール</h1>
-        <p class="site-desc">Vロード周回、経験値計算、称号同値、リアタイ大会ボーダー予測をひとつにまとめた攻略ツールです。</p>
-    　　<h6>最終更新2026/08/17</h6>
+        <p class="site-desc">Vロード周回、経験値計算、称号同値、リアタイ階級・ランク計算をひとつにまとめた攻略ツールです。</p>
+        <h6>最終更新 2026/08/17</h6>
     </header>
 
     <!-- 1. Vロード エナジー収支計算 -->
@@ -389,7 +395,7 @@
                 <option value="all">全3ステータス同値 (全同値)</option>
             </select>
         </div>
-        <button onclick="calcTitleAssist()">狙える称号と極意書おすすめ枚数を計算</button>
+        <button onclick="calcTitleAssist()">狙える称号を計算</button>
         <div class="result-box" id="titleResult">能力値を入力して計算してください。</div>
     </div>
 
@@ -431,9 +437,82 @@
         <div class="result-box" id="predictResult">初日レートと現在の経過状況を入力して計算してください。</div>
     </div>
 
-    <!-- 5. お問い合わせフォーム -->
+    <!-- 5. リアタイ ランク昇格＆階級到達計算 -->
+    <div class="card">
+        <h2>5. リアタイ ランク昇格＆階級到達計算</h2>
+        
+        <h3>① ランク昇格・残留条件計算</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label>現在のランク</label>
+                <select id="rtRank">
+                    <option value="ルーキー1">ルーキー 1</option>
+                    <option value="ルーキー2">ルーキー 2</option>
+                    <option value="ルーキー3">ルーキー 3</option>
+                    <option value="ルーキー4">ルーキー 4</option>
+                    <option value="ルーキー5">ルーキー 5</option>
+                    <option value="ブロンズ1">ブロンズ 1</option>
+                    <option value="ブロンズ2">ブロンズ 2</option>
+                    <option value="ブロンズ3">ブロンズ 3</option>
+                    <option value="ブロンズ4">ブロンズ 4</option>
+                    <option value="ブロンズ5">ブロンズ 5</option>
+                    <option value="シルバー1">シルバー 1</option>
+                    <option value="シルバー2">シルバー 2</option>
+                    <option value="シルバー3">シルバー 3</option>
+                    <option value="シルバー4">シルバー 4</option>
+                    <option value="シルバー5">シルバー 5</option>
+                    <option value="ゴールド1">ゴールド 1</option>
+                    <option value="ゴールド2">ゴールド 2</option>
+                    <option value="ゴールド3">ゴールド 3</option>
+                    <option value="ゴールド4">ゴールド 4</option>
+                    <option value="ゴールド5">ゴールド 5</option>
+                    <option value="プラチナ1" selected>プラチナ 1</option>
+                    <option value="プラチナ2">プラチナ 2</option>
+                    <option value="プラチナ3">プラチナ 3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>現在の勝ち点</label>
+                <input type="number" id="rtCurrentPts" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>現在の消化試合数</label>
+                <input type="number" id="rtPlayedMatches" value="0" min="0" max="10">
+            </div>
+        </div>
+        <button onclick="calcRankPromotion()">昇格・残留に必要な勝利数を計算</button>
+        <div class="result-box" id="rtRankResult">ランクと現在の状況を入力して計算してください。</div>
+
+        <hr style="margin: 25px 0; border: 0; border-top: 1px dashed #cbd5e1;">
+
+        <h3>② 階級到達 目安試合数計算</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label>現在の階級（自動判定／手動入力補助）</label>
+                <select id="rtClassCurrent" onchange="syncStarsFromClass()"></select>
+            </div>
+            <div class="form-group">
+                <label>目標の階級</label>
+                <select id="rtClassTarget"></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>現在の累計勝ち星数</label>
+                <input type="number" id="rtCurrentStars" value="0" min="0" oninput="syncClassFromStars()">
+            </div>
+            <div class="form-group">
+                <label>想定勝率 (%)</label>
+                <input type="number" id="rtWinRate" value="55" min="1" max="100">
+            </div>
+        </div>
+        <button onclick="calcClassReach()">必要勝ち星と到達目安試合数を計算</button>
+        <div class="result-box" id="rtClassResult">勝ち星数と想定勝率を入力して計算してください。</div>
+    </div>
+
+    <!-- 6. お問い合わせフォーム -->
     <div class="card" id="contact">
-        <h2>5. お問い合わせ・ご要望</h2>
+        <h2>6. お問い合わせ・ご要望</h2>
         <p style="font-size:0.9rem; color:#64748b;">ツールの不具合報告や機能のご要望は、以下のフォームよりお気軽にご連絡ください。</p>
         <div class="iframe-container">
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSehdTIFei4lYw6nskr2iVyVVpmVlgaHqky-gYr6jmIIXzWv_w/viewform?embedded=true" height="520" frameborder="0" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
@@ -466,7 +545,7 @@
 </div>
 
 <script>
-// Vロード達成報酬テーブル（契約書獲得回=0エナジー、表記なし=10エナジー定義版）
+// --- Vロード 達成報酬テーブル ---
 const V_ROAD_WIN_REWARDS = {
     1: { 1: 25, 2: 10, 3: 10, 4: 10, 5: 0, 10: 25, 20: 25, 30: 25, 40: 25, 50: 0, defaultRate: 10 },
     2: { 1: 25, 2: 10, 3: 10, 4: 10, 5: 0, 10: 25, 20: 25, 30: 25, 40: 25, 50: 0, defaultRate: 10 },
@@ -478,6 +557,7 @@ const V_ROAD_WIN_REWARDS = {
     8: { 1: 25, 2: 15, 3: 15, 4: 15, 5: 0, 10: 25, 20: 50, 30: 25, 40: 25, 50: 50, 60: 25, 70: 25, 80: 25, 90: 25, 100: 0, 120: 50, 150: 100, 200: 100, 250: 100, 300: 0, defaultRate: 10 }
 };
 
+// 累計経験値テーブル
 const CUMULATIVE_EXP = [
     0, 20, 46, 78, 117, 163, 216, 277, 346, 423,
     509, 605, 710, 826, 952, 1089, 1239, 1401, 1576, 1765,
@@ -491,67 +571,148 @@ const CUMULATIVE_EXP = [
 
 const V_ROAD_EXP_BASE = { 1: 50, 2: 62, 3: 81, 4: 98, 5: 117, 6: 130, 7: 140, 8: 150 };
 
-const GOKUISHI_PROB_TABLE = {
-    0: { 4: 0.10, 3: 0.15, 2: 0.35, 1: 0.40 },
-    1: { 4: 0.15, 3: 0.25, 2: 0.35, 1: 0.25 },
-    2: { 4: 0.20, 3: 0.30, 2: 0.30, 1: 0.20 },
-    3: { 4: 0.25, 3: 0.35, 2: 0.30, 1: 0.10 },
-    4: { 4: 0.30, 3: 0.55, 2: 0.15, 1: 0.00 },
-    5: { 4: 0.40, 3: 0.60, 2: 0.00, 1: 0.00 }
-};
-
+// 称号データベース
 const TITLE_DATABASE = [
-    { name: "火の玉ボール", star: 4, type: "投手", stats: { kyu: 3, sei: 1, sta: 0 } },
-    { name: "ミスターコントロール", star: 4, type: "投手", stats: { kyu: 1, sei: 3, sta: 0 } },
-    { name: "永久機関", star: 4, type: "投手", stats: { kyu: 2, sei: 0, sta: 2 } },
-    { name: "超特急", star: 4, type: "投手", stats: { kyu: 3, sei: 0, sta: 1 } },
-    { name: "魂の投球", star: 4, type: "投手", stats: { kyu: 2, sei: 2, sta: 0 } },
-    { name: "精密機械", star: 3, type: "投手", stats: { kyu: 0, sei: 3, sta: 0 } },
-    { name: "本格派", star: 3, type: "投手", stats: { kyu: 2, sei: 1, sta: 0 } },
-    { name: "不屈の闘志", star: 3, type: "投手", stats: { kyu: 2, sei: 0, sta: 1 } },
-    { name: "勝利の死者", star: 3, type: "投手", stats: { kyu: 0, sei: 0, sta: 0 } },
-    { name: "うなる剛腕", star: 3, type: "投手", stats: { kyu: 3, sei: 0, sta: 0 } },
-    { name: "技巧派", star: 3, type: "投手", stats: { kyu: 1, sei: 2, sta: 0 } },
-    { name: "鉄腕", star: 3, type: "投手", stats: { kyu: 0, sei: 0, sta: 3 } },
-    { name: "好投手", star: 2, type: "投手", stats: { kyu: 1, sei: 1, sta: 0 } },
-    { name: "反骨精神", star: 2, type: "投手", stats: { kyu: 2, sei: -1, sta: 0 } },
-    { name: "粘りの投球", star: 2, type: "投手", stats: { kyu: 0, sei: 1, sta: 1 } },
-    { name: "針の穴を通すような制球", star: 2, type: "投手", stats: { kyu: -1, sei: 3, sta: 0 } },
-    { name: "圧倒的な制球", star: 2, type: "投手", stats: { kyu: 0, sei: 2, sta: 0 } },
-    { name: "全力投球", star: 2, type: "投手", stats: { kyu: 3, sei: -1, sta: 0 } },
-    { name: "攻めの投球術", star: 2, type: "投手", stats: { kyu: 1, sei: 0, sta: 1 } },
-    { name: "圧倒的な球威", star: 2, type: "投手", stats: { kyu: 2, sei: 0, sta: 0 } },
-    { name: "球威自慢", star: 1, type: "投手", stats: { kyu: 1, sei: 0, sta: 0 } },
-    { name: "ケンカ投法", star: 1, type: "投手", stats: { kyu: 2, sei: -1, sta: 0 } },
-    { name: "丁寧な投球", star: 1, type: "投手", stats: { kyu: -1, sei: 2, sta: 0 } },
-    { name: "強心臓", star: 1, type: "投手", stats: { kyu: 0, sei: 0, sta: 0 } },
-    { name: "制球自慢", star: 1, type: "投手", stats: { kyu: 0, sei: 1, sta: 0 } },
-    { name: "安打製造機", star: 4, type: "野手", stats: { mee: 3, pow: 1, run: 0 } },
-    { name: "バズーカー", star: 4, type: "野手", stats: { mee: 1, pow: 3, run: 0 } },
-    { name: "電光石火", star: 4, type: "野手", stats: { mee: 2, pow: 0, run: 2 } },
-    { name: "脅威のスラッガー", star: 4, type: "野手", stats: { mee: 2, pow: 2, run: 0 } },
-    { name: "勝利の死者", star: 3, type: "野手", stats: { mee: 0, pow: 0, run: 0 } },
-    { name: "スナイパー", star: 3, type: "野手", stats: { mee: 2, pow: 1, run: 0 } },
-    { name: "怪力無双", star: 3, type: "野手", stats: { mee: 0, pow: 3, run: 0 } },
-    { name: "稲妻", star: 3, type: "野手", stats: { mee: 0, pow: 2, run: 1 } },
-    { name: "超人", star: 3, type: "野手", stats: { mee: 2, pow: 0, run: 1 } },
-    { name: "好球必打", star: 3, type: "野手", stats: { mee: 3, pow: 0, run: 0 } },
-    { name: "飛ばし屋", star: 3, type: "野手", stats: { mee: 1, pow: 2, run: 0 } },
-    { name: "強打者", star: 2, type: "野手", stats: { mee: 1, pow: 1, run: 0 } },
-    { name: "切り込み隊長", star: 2, type: "野手", stats: { mee: 1, pow: 0, run: 1 } },
-    { name: "反骨精神", star: 2, type: "野手", stats: { mee: -1, pow: 2, run: 0 } },
-    { name: "ラン＆ガン", star: 2, type: "野手", stats: { mee: 0, pow: 1, run: 1 } },
-    { name: "ミスターフルスイング", star: 2, type: "野手", stats: { mee: -1, pow: 3, run: 0 } },
-    { name: "圧倒的パワー", star: 2, type: "野手", stats: { mee: 0, pow: 2, run: 0 } },
-    { name: "コンタクトヒッター", star: 2, type: "野手", stats: { mee: 3, pow: -1, run: 0 } },
-    { name: "圧倒的なミート力", star: 2, type: "野手", stats: { mee: 2, pow: 0, run: 0 } },
-    { name: "パワー自慢", star: 1, type: "野手", stats: { mee: 0, pow: 1, run: 0 } },
-    { name: "強心臓", star: 1, type: "野手", stats: { mee: 0, pow: 0, run: 0 } },
-    { name: "打撃職人", star: 1, type: "野手", stats: { mee: 2, pow: -1, run: 0 } },
-    { name: "大砲", star: 1, type: "野手", stats: { mee: -1, pow: 2, run: 0 } },
-    { name: "ミート自慢", star: 1, type: "野手", stats: { mee: 1, pow: 0, run: 0 } }
+    { name: "火の玉ボール", star: 4, type: "投手", stats: { stat1: 3, stat2: 1, stat3: 0 } },
+    { name: "ミスターコントロール", star: 4, type: "投手", stats: { stat1: 1, stat2: 3, stat3: 0 } },
+    { name: "永久機関", star: 4, type: "投手", stats: { stat1: 2, stat2: 0, stat3: 2 } },
+    { name: "超特急", star: 4, type: "投手", stats: { stat1: 3, stat2: 0, stat3: 1 } },
+    { name: "魂の投球", star: 4, type: "投手", stats: { stat1: 2, stat2: 2, stat3: 0 } },
+    { name: "精密機械", star: 3, type: "投手", stats: { stat1: 0, stat2: 3, stat3: 0 } },
+    { name: "本格派", star: 3, type: "投手", stats: { stat1: 2, stat2: 1, stat3: 0 } },
+    { name: "不屈の闘志", star: 3, type: "投手", stats: { stat1: 2, stat2: 0, stat3: 1 } },
+    { name: "うなる剛腕", star: 3, type: "投手", stats: { stat1: 3, stat2: 0, stat3: 0 } },
+    { name: "技巧派", star: 3, type: "投手", stats: { stat1: 1, stat2: 2, stat3: 0 } },
+    { name: "鉄腕", star: 3, type: "投手", stats: { stat1: 0, stat2: 0, stat3: 3 } },
+    { name: "好投手", star: 2, type: "投手", stats: { stat1: 1, stat2: 1, stat3: 0 } },
+    { name: "反骨精神", star: 2, type: "投手", stats: { stat1: 2, stat2: -1, stat3: 0 } },
+    { name: "粘りの投球", star: 2, type: "投手", stats: { stat1: 0, stat2: 1, stat3: 1 } },
+    { name: "針の穴を通すような制球", star: 2, type: "投手", stats: { stat1: -1, stat2: 3, stat3: 0 } },
+    { name: "圧倒的な制球", star: 2, type: "投手", stats: { stat1: 0, stat2: 2, stat3: 0 } },
+    { name: "全力投球", star: 2, type: "投手", stats: { stat1: 3, stat2: -1, stat3: 0 } },
+    { name: "攻めの投球術", star: 2, type: "投手", stats: { stat1: 1, stat2: 0, stat3: 1 } },
+    { name: "圧倒的な球威", star: 2, type: "投手", stats: { stat1: 2, stat2: 0, stat3: 0 } },
+    { name: "球威自慢", star: 1, type: "投手", stats: { stat1: 1, stat2: 0, stat3: 0 } },
+    { name: "ケンカ投法", star: 1, type: "投手", stats: { stat1: 2, stat2: -1, stat3: 0 } },
+    { name: "丁寧な投球", star: 1, type: "投手", stats: { stat1: -1, stat2: 2, stat3: 0 } },
+    { name: "制球自慢", star: 1, type: "投手", stats: { stat1: 0, stat2: 1, stat3: 0 } },
+
+    { name: "安打製造機", star: 4, type: "野手", stats: { stat1: 3, stat2: 1, stat3: 0 } },
+    { name: "バズーカー", star: 4, type: "野手", stats: { stat1: 1, stat2: 3, stat3: 0 } },
+    { name: "電光石火", star: 4, type: "野手", stats: { stat1: 2, stat2: 0, stat3: 2 } },
+    { name: "脅威のスラッガー", star: 4, type: "野手", stats: { stat1: 2, stat2: 2, stat3: 0 } },
+    { name: "スナイパー", star: 3, type: "野手", stats: { stat1: 2, stat2: 1, stat3: 0 } },
+    { name: "怪力無双", star: 3, type: "野手", stats: { stat1: 0, stat2: 3, stat3: 0 } },
+    { name: "稲妻", star: 3, type: "野手", stats: { stat1: 0, stat2: 2, stat3: 1 } },
+    { name: "超人", star: 3, type: "野手", stats: { stat1: 2, stat2: 0, stat3: 1 } },
+    { name: "好球必打", star: 3, type: "野手", stats: { stat1: 3, stat2: 0, stat3: 0 } },
+    { name: "飛ばし屋", star: 3, type: "野手", stats: { stat1: 1, stat2: 2, stat3: 0 } },
+    { name: "強打者", star: 2, type: "野手", stats: { stat1: 1, stat2: 1, stat3: 0 } },
+    { name: "切り込み隊長", star: 2, type: "野手", stats: { stat1: 1, stat2: 0, stat3: 1 } },
+    { name: "反骨精神", star: 2, type: "野手", stats: { stat1: -1, stat2: 2, stat3: 0 } },
+    { name: "ラン＆ガン", star: 2, type: "野手", stats: { stat1: 0, stat2: 1, stat3: 1 } },
+    { name: "ミスターフルスイング", star: 2, type: "野手", stats: { stat1: -1, stat2: 3, stat3: 0 } },
+    { name: "圧倒的パワー", star: 2, type: "野手", stats: { stat1: 0, stat2: 2, stat3: 0 } },
+    { name: "コンタクトヒッター", star: 2, type: "野手", stats: { stat1: 3, stat2: -1, stat3: 0 } },
+    { name: "圧倒的なミート力", star: 2, type: "野手", stats: { stat1: 2, stat2: 0, stat3: 0 } },
+    { name: "パワー自慢", star: 1, type: "野手", stats: { stat1: 0, stat2: 1, stat3: 0 } },
+    { name: "打撃職人", star: 1, type: "野手", stats: { stat1: 2, stat2: -1, stat3: 0 } },
+    { name: "大砲", star: 1, type: "野手", stats: { stat1: -1, stat2: 2, stat3: 0 } },
+    { name: "ミート自慢", star: 1, type: "野手", stats: { stat1: 1, stat2: 0, stat3: 0 } }
 ];
 
+// リアタイ ランクデータ
+const RT_RANK_DATA = {
+    "ルーキー1": { totalMatches: 5, promoPts: 600, keepPts: 0 },
+    "ルーキー2": { totalMatches: 5, promoPts: 700, keepPts: 0 },
+    "ルーキー3": { totalMatches: 5, promoPts: 800, keepPts: 0 },
+    "ルーキー4": { totalMatches: 5, promoPts: 900, keepPts: 0 },
+    "ルーキー5": { totalMatches: 5, promoPts: 1000, keepPts: 0 },
+    "ブロンズ1": { totalMatches: 5, promoPts: 700, keepPts: 0 },
+    "ブロンズ2": { totalMatches: 5, promoPts: 800, keepPts: 0 },
+    "ブロンズ3": { totalMatches: 5, promoPts: 900, keepPts: 0 },
+    "ブロンズ4": { totalMatches: 5, promoPts: 1000, keepPts: 0 },
+    "ブロンズ5": { totalMatches: 5, promoPts: 1100, keepPts: 0 },
+    "シルバー1": { totalMatches: 5, promoPts: 700, keepPts: 0 },
+    "シルバー2": { totalMatches: 5, promoPts: 800, keepPts: 0 },
+    "シルバー3": { totalMatches: 5, promoPts: 900, keepPts: 0 },
+    "シルバー4": { totalMatches: 5, promoPts: 1000, keepPts: 0 },
+    "シルバー5": { totalMatches: 5, promoPts: 1100, keepPts: 0 },
+    "ゴールド1": { totalMatches: 5, promoPts: 800, keepPts: 0 },
+    "ゴールド2": { totalMatches: 5, promoPts: 900, keepPts: 0 },
+    "ゴールド3": { totalMatches: 5, promoPts: 1000, keepPts: 0 },
+    "ゴールド4": { totalMatches: 5, promoPts: 1100, keepPts: 0 },
+    "ゴールド5": { totalMatches: 5, promoPts: 1200, keepPts: 0 },
+    "プラチナ1": { totalMatches: 10, promoPts: 1800, keepPts: 0 },
+    "プラチナ2": { totalMatches: 10, promoPts: 2000, keepPts: 1600 },
+    "プラチナ3": { totalMatches: 10, promoPts: 2400, keepPts: 1800 }
+};
+
+// リアタイ 階級データ
+const RT_CLASS_DATA = [
+    { name: "常人九位", stars: 1 }, { name: "常人八位", stars: 3 }, { name: "常人七位", stars: 5 },
+    { name: "常人六位", stars: 7 }, { name: "常人五位", stars: 11 }, { name: "常人四位", stars: 15 },
+    { name: "常人三位", stars: 19 }, { name: "常人二位", stars: 27 }, { name: "常人一位", stars: 35 },
+    { name: "名人九位", stars: 43 }, { name: "名人八位", stars: 52 }, { name: "名人七位", stars: 61 },
+    { name: "名人六位", stars: 71 }, { name: "名人五位", stars: 81 }, { name: "名人四位", stars: 92 },
+    { name: "名人三位", stars: 103 }, { name: "名人二位", stars: 115 }, { name: "名人一位", stars: 128 },
+    { name: "達人九位", stars: 142 }, { name: "達人八位", stars: 158 }, { name: "達人七位", stars: 177 },
+    { name: "達人六位", stars: 199 }, { name: "達人五位", stars: 224 }, { name: "達人四位", stars: 253 },
+    { name: "達人三位", stars: 286 }, { name: "達人二位", stars: 324 }, { name: "達人一位", stars: 367 },
+    { name: "球聖九位", stars: 420 }, { name: "球聖八位", stars: 482 }, { name: "球聖七位", stars: 558 },
+    { name: "球聖六位", stars: 648 }, { name: "球聖五位", stars: 757 }, { name: "球聖四位", stars: 887 },
+    { name: "球聖三位", stars: 1044 }, { name: "球聖二位", stars: 1232 }, { name: "球聖一位", stars: 1457 },
+    { name: "球王", stars: 1862 }, { name: "球帝", stars: 2592 }, { name: "球神", stars: 3906 }, { name: "球覇", stars: 6271 }
+];
+
+function initClassSelects() {
+    const curSelect = document.getElementById('rtClassCurrent');
+    const tarSelect = document.getElementById('rtClassTarget');
+    if (!curSelect || !tarSelect) return;
+    
+    curSelect.innerHTML = '';
+    tarSelect.innerHTML = '';
+
+    RT_CLASS_DATA.forEach((item, idx) => {
+        let opt1 = document.createElement('option');
+        opt1.value = idx;
+        opt1.textContent = `${item.name} (${item.stars}星)`;
+        curSelect.appendChild(opt1);
+
+        let opt2 = document.createElement('option');
+        opt2.value = idx;
+        opt2.textContent = `${item.name} (${item.stars}星)`;
+        tarSelect.appendChild(opt2);
+    });
+
+    curSelect.selectedIndex = 0;
+    tarSelect.selectedIndex = 18; // 初期ターゲット：達人九位
+}
+
+function syncStarsFromClass() {
+    const curIdx = parseInt(document.getElementById('rtClassCurrent').value);
+    document.getElementById('rtCurrentStars').value = RT_CLASS_DATA[curIdx].stars;
+}
+
+function syncClassFromStars() {
+    const stars = parseInt(document.getElementById('rtCurrentStars').value) || 0;
+    const curSelect = document.getElementById('rtClassCurrent');
+    
+    let foundIdx = 0;
+    for (let i = RT_CLASS_DATA.length - 1; i >= 0; i--) {
+        if (stars >= RT_CLASS_DATA[i].stars) {
+            foundIdx = i;
+            break;
+        }
+    }
+    curSelect.value = foundIdx;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    initClassSelects();
+});
+
+// --- 1. Vロード エナジー計算 ---
 function calcVEnergy() {
     const level = parseInt(document.getElementById('vEnergyLevel').value);
     let winCount = parseInt(document.getElementById('vWinCount').value);
@@ -592,6 +753,7 @@ function calcVEnergy() {
     `;
 }
 
+// --- 2. 育成必要試合数計算 ---
 function calcVMatches() {
     const curLv = parseInt(document.getElementById('currentLevel').value);
     const tarLv = parseInt(document.getElementById('targetLevel').value);
@@ -611,37 +773,33 @@ function calcVMatches() {
     let baseStartExp = CUMULATIVE_EXP[startIdx];
     let targetExp = CUMULATIVE_EXP[targetIdx];
     
-    // 現在のレベルから次のレベルに上がるのに必要な基本経験値
     let reqForNextLevel = CUMULATIVE_EXP[startIdx + 1] - CUMULATIVE_EXP[startIdx];
     
     let currentExp = baseStartExp;
     if (expToNextInput !== "") {
         let remainingExpToNext = parseInt(expToNextInput);
         if (!isNaN(remainingExpToNext) && remainingExpToNext >= 0) {
-            // 入力された「残り経験値」から、すでに獲得済みの経験値を計算して反映
             let gainedInCurrentLv = Math.max(0, reqForNextLevel - remainingExpToNext);
             currentExp += gainedInCurrentLv;
         }
     }
 
     let reqExp = Math.max(0, targetExp - currentExp);
-
     let expPerMatch = Math.round(V_ROAD_EXP_BASE[vLevel] * bonus);
     let totalMatches = Math.ceil(reqExp / expPerMatch);
-    let laps = (totalMatches / 38).toFixed(1);
-    
-    let rawEnergyCost = (totalMatches / 38) * (isHalf ? 24.5 : 49);
-    let energyCost = Math.round(rawEnergyCost);
+    let totalLaps = (totalMatches / 38).toFixed(2);
+    let energyCost = Math.round(totalMatches * (isHalf ? (24.5 / 38) : (49 / 38)));
 
     document.getElementById('vMatchResult').innerHTML = `
-        <div class="result-title">Lv.${curLv} → Lv.${tarLv} 育成</div>
-        必要経験値: <b>${reqExp.toLocaleString()} EXP</b> (1試合あたり約 ${expPerMatch} EXP)<br>
-        必要試合数: <span class="highlight">${totalMatches} 試合</span><br>
-        Vロード周回数: 約 <b>${laps} 周</b><br>
-        全自操作時エナジー消費目安: 約 <b>${energyCost} エナジー</b> ${isHalf ? '<small style="color:#64748b;">(スタ半適用・四捨五入)</small>' : ''}
+        <div class="result-title">LV${curLv} → LV${tarLv} 育成結果</div>
+        必要累計経験値: <b>${reqExp.toLocaleString()} EXP</b><br>
+        1試合獲得目安: <b>${expPerMatch} EXP</b> (★${vLevel} / 倍率 ${bonus}倍)<br>
+        必要試合数: <span class="highlight">${totalMatches} 試合</span> (約 <b>${totalLaps} 周回</b>)<br>
+        消費スタミナ/エナジー目安: <b>${energyCost} エナジー相当</b> ${isHalf ? '<span class="badge badge-b">スタ半</span>' : ''}
     `;
 }
 
+// --- 3. 称号計算 ---
 function toggleStatsLabel() {
     const type = document.getElementById('playerType').value;
     if (type === '野手') {
@@ -657,135 +815,125 @@ function toggleStatsLabel() {
 
 function calcTitleAssist() {
     const type = document.getElementById('playerType').value;
-    const s1 = parseInt(document.getElementById('stat1').value);
-    const s2 = parseInt(document.getElementById('stat2').value);
-    const s3 = parseInt(document.getElementById('stat3').value);
-    const target = document.getElementById('targetEquivalency').value;
+    const s1 = parseInt(document.getElementById('stat1').value) || 0;
+    const s2 = parseInt(document.getElementById('stat2').value) || 0;
+    const s3 = parseInt(document.getElementById('stat3').value) || 0;
+    const targetPattern = document.getElementById('targetEquivalency').value;
 
-    const allTypeTitles = TITLE_DATABASE.filter(t => t.type === type);
+    let availableTitles = [];
 
-    const starCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
-    allTypeTitles.forEach(t => starCounts[t.star]++);
-
-    let matchedTitles = [];
-
-    allTypeTitles.forEach(t => {
-        let ns1 = s1 + (t.stats.mee || t.stats.kyu || 0);
-        let ns2 = s2 + (t.stats.pow || t.stats.sei || 0);
-        let ns3 = s3 + (t.stats.run || t.stats.sta || 0);
+    TITLE_DATABASE.filter(t => t.type === type).forEach(title => {
+        let ns1 = s1 + title.stats.stat1;
+        let ns2 = s2 + title.stats.stat2;
+        let ns3 = s3 + title.stats.stat3;
 
         let isMatch = false;
-        if (target === "1-2" && ns1 === ns2) isMatch = true;
-        if (target === "1-3" && ns1 === ns3) isMatch = true;
-        if (target === "2-3" && ns2 === ns3) isMatch = true;
-        if (target === "all" && ns1 === ns2 && ns2 === ns3) isMatch = true;
+        if (targetPattern === "1-2" && ns1 === ns2) isMatch = true;
+        if (targetPattern === "1-3" && ns1 === ns3) isMatch = true;
+        if (targetPattern === "2-3" && ns2 === ns3) isMatch = true;
+        if (targetPattern === "all" && ns1 === ns2 && ns2 === ns3) isMatch = true;
 
         if (isMatch) {
-            matchedTitles.push(t);
+            availableTitles.push(title);
         }
     });
 
-    let html = `<div class="result-title">同値達成の分析結果</div>`;
-    if (matchedTitles.length === 0) {
-        html += `現在のステータスから【${target}】同値にできる称号は存在しません。`;
-    } else {
-        html += `条件に合致する称号が <b>${matchedTitles.length}件</b> 見つかりました：<br>`;
-        html += `<div class="title-list">`;
-        matchedTitles.forEach(t => {
-            html += `<div class="title-item">★${t.star} <b>${t.name}</b></div>`;
-        });
-        html += `</div>`;
-
-        let bestBooks = 0;
-        let maxProbability = -1;
-
-        for (let books = 0; books <= 5; books++) {
-            let totalProbForBooks = 0;
-            matchedTitles.forEach(t => {
-                let starProb = GOKUISHI_PROB_TABLE[books][t.star];
-                let singleProb = starProb * (1 / starCounts[t.star]);
-                totalProbForBooks += singleProb;
-            });
-
-            if (totalProbForBooks > maxProbability) {
-                maxProbability = totalProbForBooks;
-                bestBooks = books;
-            }
-        }
-
-        let maxProbPercent = (maxProbability * 100).toFixed(2);
-
-        html += `<br>推奨「極意書」枚数: <span class="highlight">${bestBooks} 冊</span><br>`;
-        html += `<small style="color:#64748b;">（最大確率: 約 <b>${maxProbPercent}%</b> で狙いの同値称号が出現します）</small><br>`;
-        html += `<small class="note-text">※各レア度内の個別の称号の出現率（1 / 該当レア度の全称号数）× 確率表に基づいて最も確率が高くなる枚数を算出しています。</small>`;
+    if (availableTitles.length === 0) {
+        document.getElementById('titleResult').innerHTML = "条件に一致する称号が見つかりませんでした。";
+        return;
     }
+
+    let html = `<div class="result-title">狙える称号 (${availableTitles.length}件)</div><div class="title-list">`;
+    availableTitles.forEach(t => {
+        html += `<div class="title-item">★${t.star} <b>${t.name}</b> (各ステータス補正値: ${t.stats.stat1 >= 0 ? '+' : ''}${t.stats.stat1} / ${t.stats.stat2 >= 0 ? '+' : ''}${t.stats.stat2} / ${t.stats.stat3 >= 0 ? '+' : ''}${t.stats.stat3})</div>`;
+    });
+    html += `</div>`;
 
     document.getElementById('titleResult').innerHTML = html;
 }
 
-const RANK_MULTIPLIERS = {
-    100: 1.35,
-    500: 1.30,
-    1000: 1.25,
-    2500: 1.22,
-    5000: 1.20,
-    10000: 1.20
-};
-
+// --- 4. リアタイボーダー予測 ---
 function predictBorder() {
-    const totalDays = parseFloat(document.getElementById('totalDays').value);
+    const day1 = parseFloat(document.getElementById('day1Rate').value);
+    const current = parseFloat(document.getElementById('currentRate').value);
     const currentDay = parseFloat(document.getElementById('currentDay').value);
-    const day1Rate = parseFloat(document.getElementById('day1Rate').value);
-    const currentRate = parseFloat(document.getElementById('currentRate').value);
-    const rank = document.getElementById('targetRankBorder').value;
+    const totalDays = parseFloat(document.getElementById('totalDays').value);
 
-    if (currentDay < 1 || currentDay > totalDays || day1Rate <= 0) {
-        document.getElementById('predictResult').innerHTML = "正しい日数（1日目以上）と初日レートを入力してください。";
+    if (currentDay <= 0 || currentDay > totalDays || isNaN(day1) || isNaN(current)) {
+        document.getElementById('predictResult').innerHTML = "正しい数値を入力してください。";
         return;
     }
 
-    const baseMultiplier = RANK_MULTIPLIERS[rank] || 1.22;
-    const targetFinalRate = day1Rate * baseMultiplier;
-
-    let predictedFinal = 0;
-
-    if (currentDay === 1) {
-        predictedFinal = targetFinalRate;
-    } else {
-        const remainingDays = totalDays - currentDay;
-        const dailyAvgIncrease = (currentRate - day1Rate) / (currentDay - 1);
-        const trendPredicted = currentRate + (dailyAvgIncrease * remainingDays * 1.08);
-
-        const progressRatio = (currentDay - 1) / (totalDays - 1);
-        predictedFinal = (targetFinalRate * (1 - progressRatio)) + (trendPredicted * progressRatio);
-    }
-
-    predictedFinal = Math.max(currentRate, Math.round(predictedFinal));
+    let dailyIncrease = (current - day1) / (currentDay - 1 || 1);
+    let predictedFinal = current + (dailyIncrease * (totalDays - currentDay) * 1.15); // 終盤の加速を考慮
 
     document.getElementById('predictResult').innerHTML = `
-        <div class="result-title">リアタイ大会 最終ボーダー予測 (${rank}位以内)</div>
-        初日(1日目)レート: <b>${day1Rate.toLocaleString()} レート</b><br>
-        現在(${currentDay}日目)レート: <b>${currentRate.toLocaleString()} レート</b><br>
-        ------------------------------------------<br>
-        予測最終ボーダー: <span class="highlight">${predictedFinal.toLocaleString()} レート</span><br>
-        <small style="color: #64748b;">※大会実績データ（初日推移＋日次伸び率）をもとに算出した予測値です。</small>
+        <div class="result-title">最終ボーダー予測結果</div>
+        現在のペース増分: <b>約 +${Math.round(dailyIncrease)} レート/日</b><br>
+        最終予測ボーダー: <span class="highlight">約 ${Math.round(predictedFinal).toLocaleString()} レート</span><br>
+        <small style="color:#64748b;">※終盤にかけての加速ペースを予測に含めています。</small>
     `;
 }
 
+// --- 5. リアタイ ランク＆階級計算 ---
+function calcRankPromotion() {
+    const rankKey = document.getElementById('rtRank').value;
+    const pts = parseInt(document.getElementById('rtCurrentPts').value) || 0;
+    const matches = parseInt(document.getElementById('rtPlayedMatches').value) || 0;
+
+    const rankInfo = RT_RANK_DATA[rankKey];
+    const remMatches = rankInfo.totalMatches - matches;
+    const reqPromoPts = Math.max(0, rankInfo.promoPts - pts);
+
+    document.getElementById('rtRankResult').innerHTML = `
+        <div class="result-title">${rankKey} 昇格・残留条件</div>
+        残り試合数: <b>${remMatches} 試合</b> / 必要追加勝ち点: <span class="highlight">+${reqPromoPts} P</span><br>
+        <sup>※勝: +200P、引き分け: +100P、敗北: +0P（連勝ボーナス等は未考慮）</sup>
+    `;
+}
+
+function calcClassReach() {
+    const tarIdx = parseInt(document.getElementById('rtClassTarget').value);
+    const currentStarsInput = parseInt(document.getElementById('rtCurrentStars').value) || 0;
+    const winRate = parseFloat(document.getElementById('rtWinRate').value) / 100;
+
+    if (currentStarsInput >= RT_CLASS_DATA[tarIdx].stars) {
+        document.getElementById('rtClassResult').innerHTML = "目標階級の勝ち星数は現在の累計勝ち星数より上に設定してください。";
+        return;
+    }
+
+    const targetStars = RT_CLASS_DATA[tarIdx].stars;
+    const neededStars = Math.max(0, targetStars - currentStarsInput);
+
+    if (winRate <= 0 || winRate > 1) {
+        document.getElementById('rtClassResult').innerHTML = "想定勝率は1%〜100%の間で入力してください。";
+        return;
+    }
+
+    const estimatedMatches = Math.ceil(neededStars / winRate);
+
+    document.getElementById('rtClassResult').innerHTML = `
+        <div class="result-title">目標: ${RT_CLASS_DATA[tarIdx].name} (${targetStars}星)</div>
+        現在の累計勝ち星: <b>${currentStarsInput} 星</b><br>
+        目標到達までの必要勝ち星: <span class="highlight">+${neededStars} 星</span><br>
+        想定勝率 ${winRate * 100}% での到達目安試合数: <b>約 ${estimatedMatches} 試合</b>
+    `;
+}
+
+// モーダル用制御
 function openModal() {
-    document.getElementById('privacyModal').style.display = "block";
+    document.getElementById('privacyModal').style.display = 'block';
 }
-
 function closeModal() {
-    document.getElementById('privacyModal').style.display = "none";
+    document.getElementById('privacyModal').style.display = 'none';
 }
-
 window.onclick = function(event) {
     let modal = document.getElementById('privacyModal');
     if (event.target == modal) {
-        modal.style.display = "none";
+        modal.style.display = 'none';
     }
 }
 </script>
+
 </body>
 </html>
